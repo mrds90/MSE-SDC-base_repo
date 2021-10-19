@@ -16,6 +16,3 @@ Se debe actualizar el archivo `README.md` de la entrega de alguna de las siguien
     - Se deben subir las imágenes al repositorio.
     - Se deben incluir las imágenes en el archivo Markdown de la entrega.
 
-
-[a relative link](entrega/aux.pdf)
-
