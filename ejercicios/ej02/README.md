@@ -1,8 +1,9 @@
 # Enunciado Trabajo Práctico 2
 
-Este ejercicio se realiza de manera interactiva en la clase.
+Este ejercicio se realiza de manera interactiva durante la clase.
 
-Se discuten los distintos tipos de modulaciones que conocen en un jamboard.
+Se discuten los distintos tipos de modulaciones que conocen en un
+[jamboard](https://jamboard.google.com/d/16GjeMQ6C7VarVpMoMVHqEsstkYHkQzuDuHVtl2vTaLk/edit?usp=sharing).
 
 ## Entrega
 
