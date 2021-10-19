@@ -1,0 +1,142 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Wed Oct 14 08:00:29 2020
+[*]
+[dumpfile] "/home/fzacchigna/sdc/repo/vhdl_edu_bbt/verification/tb_bb_modulator/waves.fst"
+[dumpfile_mtime] "Wed Oct 14 07:59:46 2020"
+[dumpfile_size] 51163
+[savefile] "/home/fzacchigna/sdc/repo/vhdl_edu_bbt/verification/tb_bb_modulator/waves_00.gtkw"
+[timestart] 113730000000
+[size] 1920 1016
+[pos] -1 -1
+*-32.000000 118312500000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] dut.
+[sst_width] 404
+[signals_width] 291
+[sst_expanded] 1
+[sst_vpaned_height] 286
+@c00200
+-TB Signals
+@28
+tb_dut_clk_i
+tb_dut_en_i
+tb_dut_srst_i
+@200
+-Control and status
+@28
+tb_dut_send_i
+tb_dut_tx_rdy_o
+@200
+-Input Stream
+@22
+tb_dut_is_data_i[7:0]
+@28
+tb_dut_is_dv_i
+tb_dut_is_rfd_o
+@200
+-Output Stream
+@22
+tb_dut_os_data_o[9:0]
+@28
+tb_dut_os_dv_o
+tb_dut_os_rfd_i
+@1401200
+-TB Signals
+@200
+-
+-
+@c00200
+-Control Unit
+@28
+dut.u_cu.clk_i
+dut.u_cu.en_i
+dut.u_cu.srst_i
+@200
+-Config
+@22
+dut.u_cu.nm1_bytes_i[7:0]
+dut.u_cu.nm1_pre_i[7:0]
+dut.u_cu.nm1_sfd_i[7:0]
+@200
+-States
+@28
+dut.u_cu.next_state_s
+dut.u_cu.state_s
+@200
+-Input Signals
+@28
+dut.u_cu.send_i
+@200
+-Output Signals
+@28
+dut.u_cu.tx_rdy_o
+dut.u_cu.zero_out_o
+@200
+-
+-Internal Signals
+@28
+dut.u_cu.send_d1_s
+dut.u_cu.send_i
+dut.u_cu.start_tx_s
+@24
+dut.u_cu.counter_s[10:0]
+@8024
+dut.u_cu.counter_s[10:0]
+@20000
+-
+@28
+dut.u_cu.counter_srst_s
+@1401200
+-Control Unit
+@200
+-
+@28
+dut.clk_i
+[color] 1
+dut.u_cu.state_s
+[color] 7
+dut.u_cu.counter_srst_s
+[color] 7
+dut.u_cu.counter_s[10:0]
+@22
+[color] 7
+dut.u_cu.counter_s[10:0]
+@24
+[color] 7
+dut.u_cu.counter_s[10:0]
+@8024
+[color] 7
+dut.u_cu.counter_s[10:0]
+@20000
+-
+@28
+dut.u_cu.start_tx_s
+@22
+dut.is_data_i[7:0]
+@24
+dut.is_data_i[7:0]
+@20000
+-
+@28
+dut.u_cu.data_symb_sel_o[2:0]
+@8024
+dut.u_cu.data_symb_sel_o[2:0]
+@20000
+-
+@800200
+-output stream
+@420
+dut.os_data_o[9:0]
+@8420
+dut.os_data_o[9:0]
+@20000
+-
+-
+-
+@28
+dut.os_dv_o
+dut.os_rfd_i
+@1000200
+-output stream
+[pattern_trace] 1
+[pattern_trace] 0

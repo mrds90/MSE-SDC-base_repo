@@ -1,0 +1,486 @@
+[*]
+[*] GTKWave Analyzer v3.3.102 (w)1999-2019 BSI
+[*] Wed Sep 30 07:41:36 2020
+[*]
+[dumpfile] "/home/fzacchigna/fpga/proyects/vhdl_edu_bbt/verification/tb_test_modem_channel/waves.fst"
+[dumpfile_mtime] "Wed Sep 30 07:39:54 2020"
+[dumpfile_size] 3861719
+[savefile] "/home/fzacchigna/fpga/proyects/vhdl_edu_bbt/verification/tb_test_modem_channel/waves_00.gtkw"
+[timestart] 0
+[size] 1920 1016
+[pos] -1 -1
+*-38.965061 459500000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] dut.
+[treeopen] dut.u_modem.
+[treeopen] dut.u_modem.u_dem.
+[treeopen] dut.u_modem.u_dem.u_matched_filter.
+[treeopen] dut.u_modem.u_dem.u_symb_sync.
+[treeopen] dut.u_modem.u_dem.u_symb_sync.u_bandpass_filter.
+[treeopen] dut.u_modem.u_dem.u_symb_sync.u_pre_filter.
+[treeopen] dut.u_modem.u_mod.u_fir.
+[sst_width] 408
+[signals_width] 430
+[sst_expanded] 1
+[sst_vpaned_height] 401
+@c00200
+-TB Signals
+@28
+tb_dut_clk_i
+tb_dut_en_i
+tb_dut_srst_i
+@200
+-
+@22
+tb_dut_is_data_i[7:0]
+@28
+tb_dut_is_dv_i
+tb_dut_is_rfd_o
+@200
+-
+@22
+tb_dut_os_data_o[7:0]
+@28
+tb_dut_os_dv_o
+tb_dut_os_rfd_i
+@200
+-
+@28
+tb_dut_tx_rdy_o
+@1401200
+-TB Signals
+@200
+-
+@c00200
+-Test Signals
+@28
+dut.clk_i
+dut.en_i
+dut.srst_i
+@200
+-Input Bytes
+@24
+dut.is_data_i[7:0]
+@28
+dut.is_dv_i
+dut.is_rfd_o
+@200
+-Modulated Signal
+@420
+dut.mod_os_data_s[9:0]
+@8420
+dut.mod_os_data_s[9:0]
+@20000
+-
+-
+-
+-
+@28
+dut.mod_os_dv_s
+dut.mod_os_rfd_s
+@200
+-Channel Signal
+@420
+dut.chan_os_data_s[9:0]
+@8420
+dut.chan_os_data_s[9:0]
+@20000
+-
+-
+-
+-
+@28
+dut.chan_os_dv_s
+dut.chan_os_rfd_s
+@200
+-Demodulated Bytes
+@24
+dut.os_data_o[7:0]
+@28
+dut.os_dv_o
+dut.os_rfd_i
+@200
+-Modem Control
+@28
+dut.send_s
+@200
+-Modem State
+@28
+dut.tx_rdy_s
+@1401200
+-Test Signals
+@200
+-
+@c00200
+-Modulator Signals
+@28
+dut.u_modem.u_mod.clk_i
+dut.u_modem.u_mod.en_i
+dut.u_modem.u_mod.srst_i
+@200
+-Input Stream
+@22
+dut.u_modem.u_mod.is_data_i[7:0]
+@8022
+dut.u_modem.u_mod.is_data_i[7:0]
+@28
+dut.u_modem.u_mod.is_dv_i
+dut.u_modem.u_mod.is_rfd_o
+@200
+-Output Stream
+@420
+dut.u_modem.u_mod.os_data_o[9:0]
+@8420
+dut.u_modem.u_mod.os_data_o[9:0]
+@20000
+-
+-
+-
+@28
+dut.u_modem.u_mod.os_dv_o
+dut.u_modem.u_mod.os_rfd_i
+@200
+-Control
+@28
+dut.u_modem.u_mod.send_i
+@200
+-Config
+@22
+dut.u_modem.u_mod.nm1_bytes_i[7:0]
+dut.u_modem.u_mod.nm1_pre_i[7:0]
+dut.u_modem.u_mod.nm1_sfd_i[7:0]
+@200
+-State
+@28
+dut.u_modem.u_mod.tx_rdy_o
+@1401200
+-Modulator Signals
+@200
+-
+@c00200
+-Channel Signals
+@28
+dut.u_channel.clk_i
+dut.u_channel.en_i
+dut.u_channel.srst_i
+@200
+-Input Signals
+@420
+dut.u_channel.is_data_i[9:0]
+@c08420
+dut.u_channel.is_data_i[9:0]
+@28
+(0)dut.u_channel.is_data_i[9:0]
+(1)dut.u_channel.is_data_i[9:0]
+(2)dut.u_channel.is_data_i[9:0]
+(3)dut.u_channel.is_data_i[9:0]
+(4)dut.u_channel.is_data_i[9:0]
+(5)dut.u_channel.is_data_i[9:0]
+(6)dut.u_channel.is_data_i[9:0]
+(7)dut.u_channel.is_data_i[9:0]
+(8)dut.u_channel.is_data_i[9:0]
+(9)dut.u_channel.is_data_i[9:0]
+@1401200
+-group_end
+@20000
+-
+@28
+dut.u_channel.is_dv_i
+dut.u_channel.is_rfd_o
+@200
+-Channel Signal
+@420
+dut.u_channel.os_data_o[9:0]
+@8420
+dut.u_channel.os_data_o[9:0]
+@20000
+-
+-
+@28
+dut.u_channel.os_dv_o
+dut.u_channel.os_rfd_i
+@200
+-Config
+@22
+dut.u_channel.sigma_i[15:0]
+@1401200
+-Channel Signals
+@200
+-
+@c00200
+-Demodulator Signals
+@28
+dut.u_modem.u_dem.clk_i
+dut.u_modem.u_dem.en_i
+dut.u_modem.u_dem.srst_i
+@200
+-Input Stream
+@420
+dut.u_modem.u_dem.is_data_i[9:0]
+@8420
+dut.u_modem.u_dem.is_data_i[9:0]
+@20000
+-
+-
+@28
+dut.u_modem.u_dem.is_dv_i
+dut.u_modem.u_dem.is_rfd_o
+@200
+-Output Bytes
+@22
+dut.u_modem.u_dem.os_data_o[7:0]
+@28
+dut.u_modem.u_dem.os_dv_o
+dut.u_modem.u_dem.os_rfd_i
+@200
+-Matched Filter Signals
+@420
+dut.u_modem.u_dem.mf_data_s[9:0]
+@8420
+dut.u_modem.u_dem.mf_data_s[9:0]
+@20000
+-
+-
+@28
+dut.u_modem.u_dem.mf_dv_s
+dut.u_modem.u_dem.mf_rfd_s
+@200
+-MA Delayed
+@420
+dut.u_modem.u_dem.mf_data_d_s[9:0]
+@c08420
+dut.u_modem.u_dem.mf_data_d_s[9:0]
+@28
+(0)dut.u_modem.u_dem.mf_data_d_s[9:0]
+(1)dut.u_modem.u_dem.mf_data_d_s[9:0]
+(2)dut.u_modem.u_dem.mf_data_d_s[9:0]
+(3)dut.u_modem.u_dem.mf_data_d_s[9:0]
+(4)dut.u_modem.u_dem.mf_data_d_s[9:0]
+(5)dut.u_modem.u_dem.mf_data_d_s[9:0]
+(6)dut.u_modem.u_dem.mf_data_d_s[9:0]
+(7)dut.u_modem.u_dem.mf_data_d_s[9:0]
+(8)dut.u_modem.u_dem.mf_data_d_s[9:0]
+(9)dut.u_modem.u_dem.mf_data_d_s[9:0]
+@1401200
+-group_end
+@20000
+-
+-
+@200
+-Internal Control
+-Samples and bits
+@20000
+-
+-
+@28
+dut.u_modem.u_dem.bit_s
+dut.u_modem.u_dem.data_det_s
+@200
+-State
+-Config
+@22
+dut.u_modem.u_dem.det_th_i[15:0]
+dut.u_modem.u_dem.nm1_bytes_i[7:0]
+>-237500000
+dut.u_modem.u_dem.nm1_pre_i[7:0]
+>0
+dut.u_modem.u_dem.nm1_sfd_i[7:0]
+dut.u_modem.u_dem.pll_ki_i[15:0]
+dut.u_modem.u_dem.pll_kp_i[15:0]
+@1401200
+-Demodulator Signals
+@c00200
+-Symb Sync Signals
+@420
+dut.u_modem.u_dem.mf_data_s[9:0]
+@8420
+dut.u_modem.u_dem.mf_data_s[9:0]
+@20000
+-
+-
+@c00420
+dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+@28
+(0)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(1)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(2)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(3)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(4)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(5)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(6)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(7)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(8)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(9)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+@1401200
+-group_end
+@c08420
+dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+@28
+(0)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(1)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(2)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(3)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(4)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(5)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(6)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(7)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(8)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+(9)dut.u_modem.u_dem.u_symb_sync.pf_s[9:0]
+@1401200
+-group_end
+@20000
+-
+-
+@420
+dut.u_modem.u_dem.u_symb_sync.pf_sq_s[12:0]
+@8420
+dut.u_modem.u_dem.u_symb_sync.pf_sq_s[12:0]
+@20000
+-
+-
+@420
+dut.u_modem.u_dem.u_symb_sync.pf_sq_bpf_s[19:0]
+@8420
+dut.u_modem.u_dem.u_symb_sync.pf_sq_bpf_s[19:0]
+@20000
+-
+-
+@28
+dut.u_modem.u_dem.u_symb_sync.clk_i_s
+dut.u_modem.u_dem.u_symb_sync.clk_q_s
+dut.u_modem.u_dem.u_symb_sync.en_sample_o
+@1401200
+-Symb Sync Signals
+@c00200
+>7500000
+-PLL Signals
+@20000
+>7500000
+-
+@420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.phase_est_s[15:0]
+@8420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.phase_est_s[15:0]
+@20000
+>7500000
+-
+>7500000
+-
+>7500000
+-
+@420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.prop_err_s[15:0]
+@8420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.prop_err_s[15:0]
+@20000
+>7500000
+-
+>7500000
+-
+>7500000
+-
+@420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.int_err_s[15:0]
+@8420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.int_err_s[15:0]
+@20000
+>7500000
+-
+>7500000
+-
+>7500000
+-
+@420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.phase_err_s[15:0]
+@8420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.phase_err_s[15:0]
+@20000
+>7500000
+-
+>7500000
+-
+>7500000
+-
+@420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.phase0_s[15:0]
+@8420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.phase0_s[15:0]
+@20000
+>7500000
+-
+>7500000
+-
+>7500000
+-
+@420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.phase_s[15:0]
+@8420
+>7500000
+dut.u_modem.u_dem.u_symb_sync.u_pll.phase_s[15:0]
+@20000
+>7500000
+-
+>7500000
+-
+>7500000
+-
+@1401200
+>7500000
+-PLL Signals
+@c00200
+>0
+-Sampled data
+@420
+dut.u_modem.u_dem.sample_s[9:0]
+@8420
+dut.u_modem.u_dem.sample_s[9:0]
+@20000
+-
+@24
+dut.u_modem.u_dem.bit_counter_s[10:0]
+@8024
+dut.u_modem.u_dem.bit_counter_s[10:0]
+@20000
+-
+@28
+dut.u_modem.u_dem.bit_s
+dut.u_modem.u_dem.new_bit_s
+dut.u_modem.u_dem.data_det_s
+@1401200
+-Sampled data
+@c00200
+-Bytes
+@22
+dut.u_modem.u_dem.byte_s[7:0]
+@28
+dut.u_modem.u_dem.new_byte_s
+@1401200
+-Bytes
+@800200
+-Output Data
+@22
+dut.u_modem.u_dem.os_data_o[7:0]
+@24
+dut.u_modem.u_dem.os_data_o[7:0]
+@8024
+dut.u_modem.u_dem.os_data_o[7:0]
+@20000
+-
+@28
+dut.u_modem.u_dem.os_dv_o
+dut.u_modem.u_dem.os_rfd_i
+dut.u_modem.u_dem.rx_ovf_o
+@1000200
+-Output Data
+[pattern_trace] 1
+[pattern_trace] 0
