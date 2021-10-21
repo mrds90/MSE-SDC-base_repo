@@ -31,7 +31,7 @@ function [p n_fir] = pulse(Ts,Tsymb,type)
   % ----------------
   Beta   = 0.5;
   n_fir3 = n_pulse*5-1;
-  n_fir4 = n_pulse*5-1;
+  n_fir4 = n_fir3;
   assert(mod(n_fir3,2)==1 && n_fir3>=n_pulse);
   %
   aux_t = Ts:Ts:(Ts*(n_fir3-1)/2);
