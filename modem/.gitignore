@@ -1,0 +1,6 @@
+*.o
+*.cf
+*.fst
+*.fst.hier
+verification/tb_pll/tb_pll
+verification/tb_top_edu_bbt/tb_top_edu_bbt
