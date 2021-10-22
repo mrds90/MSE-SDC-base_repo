@@ -51,15 +51,13 @@ begin
   ------------------------------------------------------------
   -- BEGIN DUT
   ------------------------------------------------------------
-  tb_dut_rx_i <= tb_uart_tx;
-  u_dut : top_edu_bbt
-  port map
-  (
-    clk_i  => tb_dut_clk_i,
-    arst_i => tb_dut_arst_i,
-    rx_i   => tb_dut_rx_i,
-    tx_o   => tb_dut_tx_o
-  );
+  -- tb_dut_rx_i <= tb_uart_tx;
+  -- u_dut : top_edu_bbt
+  -- port map (
+  --
+  -- COMPLETAR AQUÍ
+  --
+  -- );
   ------------------------------------------------------------
   -- END DUT
   ------------------------------------------------------------

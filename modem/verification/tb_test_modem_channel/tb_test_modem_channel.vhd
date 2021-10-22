@@ -71,24 +71,12 @@ begin
   ------------------------------------------------------------
   -- BEGIN DUT
   ------------------------------------------------------------
-  dut : test_modem_channel
-  port map (
-    -- clk, en, rst
-    clk_i         => tb_dut_clk_i,
-    en_i          => tb_dut_en_i,
-    srst_i        => tb_dut_srst_i,
-    -- Input Stream
-    is_data_i     => tb_dut_is_data_i,
-    is_dv_i       => tb_dut_is_dv_i,
-    is_rfd_o      => tb_dut_is_rfd_o,
-    -- Output Stream
-    os_data_o     => tb_dut_os_data_o,
-    os_dv_o       => tb_dut_os_dv_o,
-    os_rfd_i      => tb_dut_os_rfd_i,
-    -- Others
-    tx_rdy_o      => tb_dut_tx_rdy_o,
-    rx_ovf_o      => tb_dut_rx_ovf_o
-  );
+  -- dut : test_modem_channel
+  -- port map (
+  --
+  -- COMPLETAR AQUÍ
+  --
+  -- );
   ------------------------------------------------------------
   -- END DUT
   ------------------------------------------------------------
