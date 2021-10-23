@@ -28,12 +28,12 @@ tiempo de símbolo $T_\text{symb}$ de 8 o 16 veces $T_s$.
       0.
     - La señal `n` representa a ruido blanco gausiano aditivo (AWGN) del canal.
 
-2. Graficar las señales `d`, `x` e `y` superpuestas en un mismo gráfico.
+2. Graficar las señales `d`, `x` e `c` superpuestas en un mismo gráfico.
   Realice el gráfico para cada pulso del punto anterior.
   Verificar que las deltas coinciden con los picos de los pulsos, inclusive
   para el coseno elevado.
 
-3. Grafique la densidad espectral de las señales `x` e `y` del punto anterior
+3. Grafique la densidad espectral de las señales `x` e `c` del punto anterior
   en escala semilogaritmica.
 
 4. Suba el script a la carpeta de entrega.
