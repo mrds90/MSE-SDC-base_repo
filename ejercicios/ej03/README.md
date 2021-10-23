@@ -19,6 +19,7 @@ tiempo de símbolo $T_\text{symb}$ de 8 o 16 veces $T_s$.
       2. Pulso triangular.
       3. Pulso seno.
       4. Pulso coseno elevado.
+          ![Coseno elevado](./images/raised_cosine.png)
     - La señal `x` es la señal a transmitir por el canal, se obtiene mediante la
       convolución entre `d` y `p`, o realizando el filtrado mediante el filtro
       FIR.
