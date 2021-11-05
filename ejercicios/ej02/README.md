@@ -8,8 +8,8 @@ Se discuten los distintos sobre algunos temas:
 - ¿Modulador analógico o digital?
 - ¿Qué tipo de modulaciones conocen?
 
-Utilizamos este
-[jamboard](https://jamboard.google.com/d/16GjeMQ6C7VarVpMoMVHqEsstkYHkQzuDuHVtl2vTaLk/edit?usp=sharing).
+Utilizamos un
+[jamboard](https://jamboard.google.com/d/1AarmPf-l9eZZJRaBKA3qGEfMvxZMpHlwzGKg-E6Ov7Q/edit?usp=sharing)
 para dejar plasmados los conceptos.
 
 ## Entrega

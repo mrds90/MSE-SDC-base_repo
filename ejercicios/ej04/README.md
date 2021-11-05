@@ -6,8 +6,9 @@ Se discuten los distintos tipos de efectos distorsivos que pueden afectar
 a las señales y a los símbolos recibidos, y cómo éstos pueden ser observados
 en las constelaciones.
 
-Lo resultados se vuelcan en un
-[jamboard](https://jamboard.google.com/d/15HYWykJaYJ3uIS60Nc6WTPq-GqJ3d7EDixbJeXWxZbA/edit?usp=sharing).
+Utilizamos un
+[jamboard](https://jamboard.google.com/d/15HYWykJaYJ3uIS60Nc6WTPq-GqJ3d7EDixbJeXWxZbA/edit?usp=sharing)
+para dejar plasmados los conceptos.
 
 ## Entrega
 

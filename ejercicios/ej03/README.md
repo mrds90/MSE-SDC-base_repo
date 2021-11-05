@@ -2,7 +2,7 @@
 
 Se tiene el siguiente sistema:
 
-![Modulador + Canal](./images/ej04-sistema.png)
+![Modulador + Canal](./images/ej03-sistema.png)
 
 Considere un periodo de muestreo de $T_s = \frac{1}{16}\,\mu\text{s}$ y un
 tiempo de símbolo $T_\text{symb}$ de 8 o 16 veces $T_s$.
