@@ -89,28 +89,34 @@ t = 0:Ts:Ts*(length(x)-1);
 if N_TX<=10
   % Mod
   figure(); hold on;
-  stem(k,d*2-1,'x','linewidth',4);
-  stem(t,x,    'o','linewidth',1);
+  stem(k,d*2-1,'x','linewidth',4,'displayname','d: Deltas');
+  stem(t,x,    'o','linewidth',1,'displayname','c: Canal');
+  axis([0 32*Tsymb]);
+  legend();
   % Channel
   figure(); hold on;
-  stem(k,d*2-1,'x','linewidth',4);
-  stem(t,y,    'o','linewidth',1);
+  stem(k,d*2-1,'x','linewidth',4,'displayname','d: Deltas');
+  stem(t,y,    'o','linewidth',1,'displayname','y: Luego del FIR');
+  axis([0 32*Tsymb]);
+  legend();
   % Signal Detection
   figure(); hold on;
-  plot(t,dis.y_mf);
-  plot(t,dis.y_mf_sq);
-  plot(t,dis.y_mf_sq_ma);
-  plot(t,dis.detection-2,'linewidth',4);
+  plot(t,dis.y_mf       ,'linewidth', 3, 'displayname', 'y: Luego del FIR');
+  plot(t,dis.y_mf_sq    ,'linewidth', 3, 'displayname', 'y^2: Elevada al cuadrado ');
+  plot(t,dis.y_mf_sq_ma ,'linewidth', 3, 'displayname', 'filter(y^2): Filtrada');
+  plot(t,dis.detection-2,'linewidth', 4, 'displayname', 'Detección de señal');
+  legend();
   % PLL 1
   figure(); hold on;
-  plot(t,dis.y_mf_sq      ,'-');
-  plot(t,dis.pllis.phd    ,'-','displayname','phd');
-  plot(t,dis.pllis.err    ,'-','displayname','err');
-  plot(t,dis.pllis.phi_hat,'-','displayname','phi_hat');
-  plot(t,dis.pll_cos/2-1  ,'-');
-  plot(t,dis.pll_sin/2-2.5,'-');
-  plot(t,dis.pll_clk_i-1.5,'-','linewidth',2);
-  plot(t,dis.pll_clk_q-3  ,'-','linewidth',2);
+  plot(t,dis.y_mf_sq      ,'linewidth', 3,'-');
+  plot(t,dis.pllis.phd    ,'linewidth', 3,'-','displayname','phd');
+  plot(t,dis.pllis.err    ,'linewidth', 3,'-','displayname','err');
+  plot(t,dis.pllis.phi_hat,'linewidth', 3,'-','displayname','phi_hat');
+  plot(t,dis.pll_cos/2-1  ,'linewidth', 3,'-');
+  plot(t,dis.pll_sin/2-2.5,'linewidth', 3,'-');
+  plot(t,dis.pll_clk_i-1.5,'linewidth', 3,'-','linewidth',2);
+  plot(t,dis.pll_clk_q-3  ,'linewidth', 3,'-','linewidth',2);
+  legend();
   % PLLt, 2
   figure(); hold on;
   plot(t,dis.detection,'linewidth',4);
@@ -118,6 +124,7 @@ if N_TX<=10
   plot(t,dis.pll_sin/2-2.5);
   plot(t,dis.pll_clk_i-1.5,'linewidth',2);
   plot(t,dis.pll_clk_q-3,'linewidth',2);
+  legend();
   % Synch
   figure(); hold on;
   plot(t,dis.y_mf          -7,'-o','displayname','y_{fa}');
