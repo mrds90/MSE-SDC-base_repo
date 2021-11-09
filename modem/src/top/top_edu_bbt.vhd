@@ -53,9 +53,9 @@ architecture rtl of top_edu_bbt is
   signal tx_fifo_data_count_s  : std_logic_vector(7 downto 0);
 
   -- Modem signals
-  signal modem_is_data_s    : std_logic_vector(7 downto 0); 
-  signal modem_is_dv_s      : std_logic;                    
-  signal modem_is_rfd_s     : std_logic;                    
+  signal modem_is_data_s    : std_logic_vector(7 downto 0);
+  signal modem_is_dv_s      : std_logic;
+  signal modem_is_rfd_s     : std_logic;
   signal modem_os_data_s    : std_logic_vector(7 downto 0);
   signal modem_os_dv_s      : std_logic;
   signal modem_os_rfd_s     : std_logic;
@@ -94,7 +94,7 @@ architecture rtl of top_edu_bbt is
   PORT (
       clk : IN STD_LOGIC;
       probe0 : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
-      probe1 : IN STD_LOGIC_VECTOR(9 DOWNTO 0); 
+      probe1 : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
       probe2 : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
       probe3 : IN STD_LOGIC_VECTOR(0 DOWNTO 0)
   );
@@ -138,12 +138,12 @@ begin
   -- UART Module
   u_uart : sif_uart
     generic map (
-      CLK_FREQ  => MODEM_CLK_FREQ, --frequency of system clock in Hertz                                            
-      BAUD_RATE => UART_BAUD_RATE, --data link baud rate in bits/second                                            
-      OS_RATE   => 16,             --oversampling rate to find center of receive bits (in samples per baud period) 
-      D_WIDTH   => 8,              --data bus width                                                                
-      PARITY    => 0,              --0 for no parity, 1 for parity                                                 
-      PARITY_EO => '0'             --'0' for even, '1' for odd parity                                              
+      CLK_FREQ  => MODEM_CLK_FREQ, --frequency of system clock in Hertz
+      BAUD_RATE => UART_BAUD_RATE, --data link baud rate in bits/second
+      OS_RATE   => 16,             --oversampling rate to find center of receive bits (in samples per baud period)
+      D_WIDTH   => 8,              --data bus width
+      PARITY    => 0,              --0 for no parity, 1 for parity
+      PARITY_EO => '0'             --'0' for even, '1' for odd parity
     )
     port map (
       -- clk, srst
@@ -180,12 +180,12 @@ begin
     srst_i       => srst_s,
     -- Input Stream Interface
     is_data_i    => uart_os_data_s,
-    is_dv_i      => uart_os_dv_s, 
+    is_dv_i      => uart_os_dv_s,
     is_rfd_o     => uart_os_rfd_s,
     -- Output Stream Interface
-    os_data_o    => tx_fifo_os_data_s, 
-    os_dv_o      => tx_fifo_os_dv_s,   
-    os_rfd_i     => tx_fifo_os_rfd_s,  
+    os_data_o    => tx_fifo_os_data_s,
+    os_dv_o      => tx_fifo_os_dv_s,
+    os_rfd_i     => tx_fifo_os_rfd_s,
     -- Status
     empty_o      => tx_fifo_empty_s,
     full_o       => tx_fifo_full_s,
@@ -205,17 +205,17 @@ begin
         modem_send_s <= '0';
         -- modem_tx_rdy_d10_s <= (others => '0');
       else
-        if  uart_os_dv_s   = '1' and 
-            uart_os_rfd_s  = '1' and 
-            modem_is_dv_s  = '1' and 
+        if  uart_os_dv_s   = '1' and
+            uart_os_rfd_s  = '1' and
+            modem_is_dv_s  = '1' and
             modem_is_rfd_s = '1'
         then
           pipe_data_counter_s <= pipe_data_counter_s;
-        elsif  modem_is_dv_s  = '1' and 
+        elsif  modem_is_dv_s  = '1' and
                modem_is_rfd_s = '1'
         then
           pipe_data_counter_s <= std_logic_vector(unsigned(pipe_data_counter_s)-1);
-        elsif  uart_os_dv_s   = '1' and 
+        elsif  uart_os_dv_s   = '1' and
                uart_os_rfd_s  = '1'
         then
           pipe_data_counter_s <= std_logic_vector(unsigned(pipe_data_counter_s)+1);
@@ -265,15 +265,15 @@ begin
     adc_is_dv_i   => chan_os_dv_s,
     adc_is_rfd_o  => chan_os_rfd_s,
     -- Config
-    nm1_bytes_i   => nm1_bytes_c,  
-    nm1_pre_i     => nm1_pre_c,    
-    nm1_sfd_i     => nm1_sfd_c,    
+    nm1_bytes_i   => nm1_bytes_c,
+    nm1_pre_i     => nm1_pre_c,
+    nm1_sfd_i     => nm1_sfd_c,
     det_th_i      => det_th_c,
     pll_kp_i      => pll_kp_c,
     pll_ki_i      => pll_ki_c,
-    -- Control    
+    -- Control
     send_i        => modem_send_s,
-    -- State      
+    -- State
     tx_rdy_o      => modem_tx_rdy_s,
     rx_ovf_o      => modem_rx_ovf_s
   );
@@ -293,12 +293,12 @@ begin
     srst_i       => srst_s,
     -- Input Stream Interface
     is_data_i    => modem_os_data_s,
-    is_dv_i      => modem_os_dv_s, 
+    is_dv_i      => modem_os_dv_s,
     is_rfd_o     => modem_os_rfd_s,
     -- Output Stream Interface
-    os_data_o    => rx_fifo_os_data_s, 
-    os_dv_o      => rx_fifo_os_dv_s,   
-    os_rfd_i     => rx_fifo_os_rfd_s,  
+    os_data_o    => rx_fifo_os_data_s,
+    os_dv_o      => rx_fifo_os_dv_s,
+    os_rfd_i     => rx_fifo_os_rfd_s,
     -- Status
     empty_o      => rx_fifo_empty_s,
     full_o       => rx_fifo_full_s,

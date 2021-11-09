@@ -38,13 +38,13 @@ architecture rtl of tb_bb_modulator is
   end component bb_modulator;
 
   -- signals
-  signal tb_dut_clk_i      : std_logic := '1';                   
-  signal tb_dut_en_i       : std_logic;                    
-  signal tb_dut_srst_i     : std_logic;                   
-  signal tb_dut_is_data_i  : std_logic_vector(7 downto 0);                            
+  signal tb_dut_clk_i      : std_logic := '1';
+  signal tb_dut_en_i       : std_logic;
+  signal tb_dut_srst_i     : std_logic;
+  signal tb_dut_is_data_i  : std_logic_vector(7 downto 0);
   signal tb_dut_is_dv_i    : std_logic;
   signal tb_dut_is_rfd_o   : std_logic;
-  signal tb_dut_os_data_o  : std_logic_vector(9 downto 0);                            
+  signal tb_dut_os_data_o  : std_logic_vector(9 downto 0);
   signal tb_dut_os_dv_o    : std_logic;
   signal tb_dut_os_rfd_i   : std_logic;
   signal tb_dut_send_i     : std_logic;
@@ -53,7 +53,7 @@ architecture rtl of tb_bb_modulator is
   constant SAMPLE_PERIOD   : time    := 62500 ps;
   constant N_TX            : integer := 5;
   constant N_ZEROS         : integer := 123;
-                             
+
 begin
 
   ------------------------------------------------------------
