@@ -5,7 +5,8 @@ Simulación del RTL del modulador.
 ## Descripción
 
 En este ejercicio se debe simular el modulador, para ellos:
-1. Revisar estructura del respositorio en [README](../../README.md).
+1. Revisar estructura del respositorio en el archivo [README](../../README.md) 
+    principal del repositorio.
 2. En la carpeta `MSE-SDC-6Co2021/modem/verification/tb_modulator/` encontrarán
     un testbench incompleto, en el cual falta instanciar el modulador.
     Se debe completar.
@@ -44,3 +45,4 @@ Allí se deben incluir las distintas capturas del visualizador y una breve expli
 sobre lo que se está mostrando.
 
 Los alumnos son libres de incluir cualquier otro tipo de información que deseen.
+
