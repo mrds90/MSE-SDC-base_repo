@@ -4,3 +4,4 @@
 *.fst.hier
 verification/tb_pll/tb_pll
 verification/tb_top_edu_bbt/tb_top_edu_bbt
+verification/tb_bb_modulator/tb_bb_modulator
