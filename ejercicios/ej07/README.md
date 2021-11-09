@@ -33,9 +33,6 @@ En este ejercicio se debe simular el modulador, para ellos:
 
     Las señales de datos se deben mostrar en formato "analógico".
 
-5. Se debe guardar el archivo de configuración del visualizador `wcfg` o `gtwk` en
-    la misma carpeta que el test, en este caso en la carpeta `tb_bb_modulator`.
-
 
 ## Entrega
 
@@ -43,6 +40,10 @@ La entrega se realiza directamente actualizando el archivo `README.md`
 de la carpeta de la entrega.
 Allí se deben incluir las distintas capturas del visualizador y una breve explicación
 sobre lo que se está mostrando.
+
+Se debe guardar el archivo de configuración del visualizador `gtwk` o `wcfg`
+(GTKWave o Vivado respectivamente) en la misma carpeta que el test, en este
+caso en la carpeta `MSE-SDC-6Co2021/modem/verification/tb_modulator/`.
 
 Los alumnos son libres de incluir cualquier otro tipo de información que deseen.
 
