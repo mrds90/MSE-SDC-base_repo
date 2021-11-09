@@ -41,7 +41,7 @@ de la carpeta de la entrega.
 Allí se deben incluir las distintas capturas del visualizador y una breve explicación
 sobre lo que se está mostrando.
 
-Se debe guardar el archivo de configuración del visualizador `gtwk` o `wcfg`
+Se debe guardar el archivo de configuración del visualizador `gtkw` o `wcfg`
 (GTKWave o Vivado respectivamente) en la misma carpeta que el test, en este
 caso en la carpeta `MSE-SDC-6Co2021/modem/verification/tb_modulator/`.
 
