@@ -1,8 +1,19 @@
-# Enunciado Trabajo Práctico 3
+## Enunciado Trabajo Práctico 3
+
+Simulación del modulador y el canal.
+
+
+### Objetivo
+
+Familiarizarse con las tareas que realiza el modulador y con el modelo
+del canal y sus características.
+
+
+### Descripción
 
 Se tiene el siguiente sistema:
 
-![Modulador + Canal](./images/ej03-sistema.png)
+![Modulador + Canal](/a/raw/b/ejercicios/ej03/images/ej03-sistema.png)
 
 Considere un periodo de muestreo de $T_s = \frac{1}{16}\,\mu\text{s}$ y un
 tiempo de símbolo $T_\text{symb}$ de 8 o 16 veces $T_s$.
@@ -41,4 +52,13 @@ tiempo de símbolo $T_\text{symb}$ de 8 o 16 veces $T_s$.
 
 5. Complete el archivo `README.md` de la carpeta entrega con los gráficos
   del punto 2 y 3.
+
+
+### Entrega
+
+Se debe agregar al respositorio, en la carpeta correspondiente un script de
+*octave*, *matlab*, *python* o lenguaje similar que simule el sistema.
+
+En la misma carpeta se debe agregar un archivos `README.md` que contenga las
+capturas de la simulación y una breve explicación de lo que se está mostrando.
 
