@@ -13,7 +13,7 @@ del canal y sus características.
 
 Se tiene el siguiente sistema:
 
-![Modulador + Canal](/a/raw/b/ejercicios/ej03/images/ej03-sistema.png)
+![Modulador + Canal](./images/ej03-sistema.png)
 
 Considere un periodo de muestreo de $T_s = \frac{1}{16}\,\mu\text{s}$ y un
 tiempo de símbolo $T_\text{symb}$ de 8 o 16 veces $T_s$.

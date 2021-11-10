@@ -1,8 +1,8 @@
-# Enunciado Trabajo Práctico 5
+## Enunciado Trabajo Práctico 5
 
 Se tiene el siguiente sistema:
 
-![Modulador + Canal](./images/ej05-sistema.png)
+![Modulador + Canal + Demodulador](./images/ej05-sistema.png)
 
 
 Al igual que en el ejercicio 3 considere un periodo de muestreo de

@@ -1,3 +1,3 @@
-# Enunciado Trabajo Práctico 14
+## Enunciado Trabajo Práctico 14
 
-Actualizar el enunciado con el que está en este [repositorio](https://github.com/MSE-SDC/MSE-SDC-6Co2021).
+Actualizar el enunciado con el que está en este [repositorio](https://github.com/MSE-SDC/MSE-SDC-repo).

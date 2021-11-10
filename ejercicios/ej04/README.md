@@ -1,4 +1,4 @@
-# Enunciado Trabajo Práctico 4
+## Enunciado Trabajo Práctico 4
 
 Este ejercicio se realiza de manera interactiva durante la clase.
 
@@ -10,7 +10,7 @@ Utilizamos un
 [jamboard](https://jamboard.google.com/d/15HYWykJaYJ3uIS60Nc6WTPq-GqJ3d7EDixbJeXWxZbA/edit?usp=sharing)
 para dejar plasmados los conceptos.
 
-## Entrega
+### Entrega
 
 Se debe actualizar el archivo `README.md` de la entrega de alguna de las
 siguientes maneras:
