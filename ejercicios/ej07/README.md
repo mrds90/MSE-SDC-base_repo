@@ -1,6 +1,8 @@
 # Enunciado Trabajo Práctico 7
 
-Simulación del RTL del modulador.
+Simulación del RTL del modulador:
+
+![Diagrama em bloques del modulador](./images/BD-bb_modulator.png)
 
 ## Descripción
 
