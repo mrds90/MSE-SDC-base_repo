@@ -16,10 +16,10 @@ end entity tb_top_edu_bbt;
 architecture rtl of tb_top_edu_bbt is
 
   -- signals
-  signal tb_dut_clk_i      : std_logic := '1';                   
-  signal tb_dut_arst_i     : std_logic;                   
-  signal tb_dut_rx_i       : std_logic;                   
-  signal tb_dut_tx_o       : std_logic;                   
+  signal tb_dut_clk_i      : std_logic := '1';
+  signal tb_dut_arst_i     : std_logic;
+  signal tb_dut_rx_i       : std_logic;
+  signal tb_dut_tx_o       : std_logic;
 
   signal tb_clock_counter_s : unsigned(31 downto 0) := X"00000000";
   signal tb_uart_arst     : std_logic;
@@ -35,7 +35,7 @@ architecture rtl of tb_top_edu_bbt is
   constant SYS_CLK_FREQ   : natural := 125_000_000;
 
   constant SAMPLE_PERIOD   : time    := 62500 ps;
-                             
+
 begin
 
   ------------------------------------------------------------
@@ -51,13 +51,15 @@ begin
   ------------------------------------------------------------
   -- BEGIN DUT
   ------------------------------------------------------------
-  -- tb_dut_rx_i <= tb_uart_tx;
-  -- u_dut : top_edu_bbt
-  -- port map (
-  --
-  -- COMPLETAR AQUÍ
-  --
-  -- );
+  tb_dut_rx_i <= tb_uart_tx;
+  u_dut : top_edu_bbt
+  port map
+  (
+    clk_i  => tb_dut_clk_i,
+    arst_i => tb_dut_arst_i,
+    rx_i   => tb_dut_rx_i,
+    tx_o   => tb_dut_tx_o
+  );
   ------------------------------------------------------------
   -- END DUT
   ------------------------------------------------------------

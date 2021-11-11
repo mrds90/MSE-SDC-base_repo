@@ -5,8 +5,9 @@ Simulación (demostrativa) del sistema completo incluyendo sincronización.
 
 ### Objetivo
 
-Familiarizarse con las dificultades y las metodolosgías para la sincronización
+Familiarizarse con las dificultades que existen para la sincronización
 de símbolo.
+Conocer el método de recuperación de reloj utilizando PLL.
 
 
 ### Descripción
@@ -14,7 +15,9 @@ de símbolo.
 En este ejercicio se realiza una demostración de la simulación del sistema con:
 - Modulador
 - Canal
-- Demodulador
+- Demodulador, incluyendo la sincronización de símbolo.
+
+Se considera el siguiente sistema:
 
 ![Modulador + Canal + Demodulador](./images/ej07-sistema.png)
 
@@ -25,11 +28,17 @@ el mecanismo de sincronización.
 Se discuten los distintas dificultades involucradas en el proceso de
 sincronización.
 
-Se brindan los archivos de simulación para que los alumnos puedan reslizar
+Se discute la sincronización mediante la utilización de un PLL:
+*square-law timing recovery*.
+
+![Modulador + Canal + Demodulador](./images/square-law-timing-recovery.png)
+
+Se brindan los archivos de simulación para que los alumnos puedan realizar
 las simulaciones por su cuenta, realizar los gráficos y capturas que
 crean necesarios.
 Los alumnos son libres de analizar e investigar con mayor detalle el proceso
 de sincronización.
+
 
 ### Entrega
 
