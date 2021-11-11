@@ -5,7 +5,7 @@ Discusión sobre el concepto de modulación.
 
 ### Objetivo
 
-Obtener la visión actual del curso del concepto de modulación y
+Obtener el concepto que tienen los alumnos respecto del concepto de modulación y
 generar una idea unificada del mismo.
 
 
