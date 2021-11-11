@@ -15,8 +15,8 @@ Este ejercicio se realiza de manera interactiva durante la clase.
 
 Se discuten los distintos sobre algunos temas:
 - ¿Qué se entiende por *Modulador*?
-- ¿Modulador analógico o digital?
 - ¿Qué tipo de modulaciones conocen?
+- Modulación analógica vs digital.
 
 Utilizamos un
 [jamboard](https://jamboard.google.com/d/1AarmPf-l9eZZJRaBKA3qGEfMvxZMpHlwzGKg-E6Ov7Q/edit?usp=sharing)
