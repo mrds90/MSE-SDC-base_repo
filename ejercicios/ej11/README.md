@@ -20,20 +20,7 @@ Familiarizarse con los IP de Xilinx:
 
 ### Descripción
 
-En este ejercicio se debe simular el sistema completo, para ello:
-1. Ya se cuenta con el test creado, se llama `tb_top_edu_bbt`.
-2. Se debe simular el sistema completo.
-3. Se debe entender el funcionamiento del sistema completo.
-4. Se debe realizar una explicación del funcionamiento de cada bloque.
-    Para ello ayudarse mediante capturas de las señales necesariar.
-5. Se debe realizar una explicación del funcionamiento del sistema completo.
-    Para ello ayudarse mediante capturas de las señales necesariar.
-6. Se debe incluir una explicación y capturas que muestren los problemas
-    que existen en la sincronización, al no estar en presencia de
-    cambios en las señales.
-    Por ejemplo, comparando como se degradan las señales de sincronización
-    en un caso con muchos cambios y en un caso con pocos.
-7. Todo el contenido se debe volcar en un informe breve.
+**ToDo:** Completar
 
 
 ### Entrega
