@@ -22,6 +22,13 @@ Familiarizarse con los IP de Xilinx:
 
 **ToDo:** Completar
 
+- Proyecto Vivado
+- Agregar MCMM
+- Simular
+- Implementar
+- Agregar ILA
+- Agregar VIO
+
 
 ### Entrega
 
