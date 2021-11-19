@@ -15,7 +15,9 @@ que incluye tanto al modulador como al demodulador.
 
 ![Diagrama en bloques del canal](./images/BD-bb_channel.png)
 
-![Diagrama en bloques del canal](./images/BD-bb_demodulator.png)
+![Diagrama en bloques del demodulador](./images/BD-bb_demodulator.png)
+
+![Diagrama en bloques del modem](./images/BD-bb_modem.png)
 
 
 ### Descripción

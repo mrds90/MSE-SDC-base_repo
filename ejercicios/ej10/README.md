@@ -15,8 +15,9 @@ Familiarizarse con sistema completo, incluyendo:
 
 ### Diagramas en bloque
 
-**ToDo:**
-![Diagrama en bloques del sistema](./images/BD-system.png)
+![Diagrama en bloques del sistema](./images/BD-bb_modem.png)
+
+![Diagrama en bloques del sistema](./images/BD-top_edu_bbt.png)
 
 
 ### Descripción
