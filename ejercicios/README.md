@@ -22,8 +22,8 @@ expicación de la entrega.
 | 9    | Clase + casa | Grupal     | Simulación: Modulador + Canal + Demodulador                    | VHDL                     |
 | 10   | Clase + casa | Individual | Simulación: Sistema completo (con UART)                        | VHDL                     |
 | 11   | Clase + casa | Grupal     | Implementación: Sistema completo + ILA + VIO + caracterización | VHDL + FPGA              |
-| 12   | Demostrativo | -          | Información, entropía, compresión                              | Bash scripts             |
-| 13   | Clase        | Individual | Capacidad del canal                                            | Resolución escrita       |
+| 12   | Clase        | Individual | Capacidad del canal                                            | Resolución escrita       |
+| 13   | Demostrativo | -          | Información, entropía, compresión                              | Bash scripts             |
 | 14   | Clase        | Individual | Modelo de canal según teoría de información                    | Resolución escrita       |
 
 
