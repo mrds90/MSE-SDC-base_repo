@@ -25,6 +25,6 @@ expicación de la entrega.
 | 12   | Clase        | Individual | Capacidad del canal                                            | Resolución escrita       |
 | 13   | Demostrativo | -          | Información, entropía, compresión                              | Bash scripts             |
 | 14   | Clase        | Individual | Modelo de canal según teoría de información                    | Resolución escrita       |
-| 15   | Clase + Casa | Individual | Codigos convolucionales y Viterbi                              | Python / Octave / Matlab |
+| 15   | Clase + Casa | Individual | Codigos convolucionales y decodificador Viterbi                | Python / Octave / Matlab |
 
 
