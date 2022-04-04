@@ -39,7 +39,7 @@ I y Q.
       2. Pulso triangular.
       3. Pulso seno.
       4. Pulso **raiz** de coseno elevado.
-          ![Raiz de coseno elevado](/a/raw/b/ejercicios/ej05/images/root_raised_cosine.png)
+          ![Raiz de coseno elevado](./ej05/images/root_raised_cosine.png)
     - La señal `x` es la señal a transmitir por el canal, se obtiene mediante la
       convolución entre `d` y `p`, o realizando el filtrado mediante el filtro
       FIR.
