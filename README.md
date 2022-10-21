@@ -1,11 +1,12 @@
 # MSE-SDC: Repositorio
-Maestría en Sistemas Embebidos - Sistemas Digitales para las Comunicaciones - 6ta cohorte 2021
+Maestría en Sistemas Embebidos - Sistemas Digitales para las Comunicaciones
 
 
 ### Descripción de las carpetas del respositorio:
 
 Dentro del repositorio hay cuatro carpestas:
 ```
+MSE-SDC-repo
 ├── clases
 ├── ejercicios
 ├── modem
