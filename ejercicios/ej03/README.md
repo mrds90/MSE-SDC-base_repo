@@ -15,7 +15,7 @@ Se tiene el siguiente sistema:
 
 ![Modulador + Canal](./images/ej03-sistema.png)
 
-Considere un periodo de muestreo de $T_s = \frac{1}{16}\,\mu\text{s}$ y un
+Considere un periodo de muestreo de $T_s = \frac{1}{16}\mu\text{s}$ y un
 tiempo de símbolo $T_\text{symb}$ de 16 veces $T_s$.
 
 1. Generar un script de *octave*, *python*, *matlab*, o cualquier otro lenguaje
@@ -30,6 +30,7 @@ tiempo de símbolo $T_\text{symb}$ de 16 veces $T_s$.
       2. Pulso triangular.
       3. Pulso seno.
       4. Pulso coseno elevado.
+
           ![Coseno elevado](./images/raised_cosine.png)
     - La señal `x` es la señal a transmitir por el canal, se obtiene mediante la
       convolución entre `d` y `p`, o de manera equivalente realizando el
@@ -42,12 +43,12 @@ tiempo de símbolo $T_\text{symb}$ de 16 veces $T_s$.
       Se lo caracterizará por su varianza: $\sigma^2 = N_0$
       (Modulación en banda base).
 
-2. Graficar las señales `d`, `x` e `c` superpuestas en un mismo gráfico.
+2. Graficar las señales `d`, `x` y `c` superpuestas en un mismo gráfico.
     Realice el gráfico para cada pulso del punto anterior.
     Verificar que las deltas coinciden con los picos de los pulsos, inclusive
     para el coseno elevado.
 
-3. Graficar la densidad espectral de las señales `x` e `c` del punto anterior
+3. Graficar la densidad espectral de las señales `x` y `c` del punto anterior
     en escala semilogaritmica.
 
 4. Suba el script a la carpeta de entrega.
