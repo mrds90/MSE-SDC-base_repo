@@ -15,11 +15,11 @@ MSE-SDC-repo
 La carpeta:
 1. `clases`: Contiene las presentaciones utilizadas durantes el dictado de la materia
     a modo de material de consulta.
+
 2. `ejercicios`: Contiene los enunciados de los ejercicios que se realizarán durante
     la clase y también las carpetas correspondientes para las entregas.
-3. `scripts`: Contiene distintos scripts de simulación o scripts auxiliares utilizados
-    en el modem.
-4. `modem`: Contiene los archivos fuente de VHDL (y otros) de diseño, verificación
+
+3. `modem`: Contiene los archivos fuente de VHDL (y otros) de diseño, verificación
     e implementación del modem utilizado en la materia.
 
     Dentro de esta carpeta se encuetra esta estructura de trabajo:
@@ -49,3 +49,5 @@ La carpeta:
     del sistema.
     Estos archivos son dependientes del kit o placa utilizada para la implementación.
 
+4. `scripts`: Contiene distintos scripts de simulación o scripts auxiliares utilizados
+    en el modem.

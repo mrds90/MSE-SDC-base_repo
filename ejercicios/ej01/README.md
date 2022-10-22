@@ -1,6 +1,6 @@
 ## Enunciado Trabajo Práctico 1
 
-Clonar el respositorio.
+Clonar el respositorio y realizar la primera entrega.
 
 
 ### Objetivo
