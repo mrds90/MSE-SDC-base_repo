@@ -58,10 +58,10 @@ tiempo de símbolo $T_\text{symb}$ de 16 veces $T_s$.
 
 ### Entrega
 
-Se debe agregar al repositorio, en la carpeta de entrega correspondiente,
-el script de simulación.
+El script de simulación se debe agregar al repositorio, en la carpeta de entrega correspondiente.
 
 Asimismo, en la misma carpeta, se debe agregar un archivo `README.md` que
 contenga las capturas de la simulación y una breve explicación de lo que se
 está mostrando en cada caso.
+Este archivo debe contener las instrucciones para ejecutar el script.
 
