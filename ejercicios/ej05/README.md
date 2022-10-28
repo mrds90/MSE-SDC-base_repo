@@ -39,7 +39,7 @@ I y Q.
       2. Pulso triangular.
       3. Pulso seno.
       4. Pulso **raiz** de coseno elevado.
-          ![Raiz de coseno elevado](./ej05/images/root_raised_cosine.png)
+          ![Raiz de coseno elevado](./images/root_raised_cosine.png)
     - La señal `x` es la señal a transmitir por el canal, se obtiene mediante la
       convolución entre `d` y `p`, o realizando el filtrado mediante el filtro
       FIR.
@@ -50,9 +50,8 @@ I y Q.
       1. Una delta de altura unitaria con fase igual a cero (canal ideal).
       2. Una delta de altura unitaria con fase distinta de cero.
       3. Un canal pasa bajos.
-
-      Recordar eliminar los puntos que sean necesarios, para que las señales
-      queden "sincronizadas".
+          En este caso hay que calcular cuantos puntos se deben eliminar,
+          para que las señales queden "sincronizadas".
     - La señal `n` representa a ruido blanco gaussiano aditivo (AWGN) del canal.
       Se puede generar con muestras de una distribución normal con media cero.
       Para la varianza de la distribución, considerar la relación entre
