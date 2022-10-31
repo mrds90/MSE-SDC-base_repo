@@ -58,8 +58,7 @@ tiempo de símbolo $T_\text{symb}$ de 16 veces $T_s$.
     A diferencia del punto 1, dónde los pulsos tenían un pico de altura 1, para
     este caso se deben normalizar los pulsos para que tengan energía igual a 1.
     Para ello dividir al pulso por su energía utilizando la siguiente ecuación:
-    ![Coseno elevado](./images/energy.png)
-    <img src="https://github.com/MSE-SDC/MSE-SDC-base_repo/blob/main/ejercicios/ej03/images/energy.png" width="600">
+    <img src="https://github.com/MSE-SDC/MSE-SDC-base_repo/blob/main/ejercicios/ej03/images/energy.png" width="400">
 
     Aclaración: Se debe notar que la señal que se transmite es una señal de
     tiempo continuo y por lo tanto, el cálculo del espectro deberíamos hacerlo
