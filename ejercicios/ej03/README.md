@@ -30,8 +30,9 @@ tiempo de símbolo $T_\text{symb}$ de 16 veces $T_s$.
       2. Pulso triangular.
       3. Pulso seno.
       4. Pulso coseno elevado.
-
           ![Coseno elevado](./images/raised_cosine.png)
+
+      Todos los pulsos deben tener un pico de altura 1.
     - La señal `x` es la señal a transmitir por el canal, se obtiene mediante la
       convolución entre `d` y `p`, o de manera equivalente realizando el
       filtrado de `d` mediante el filtro FIR de coeficientes `p`.
@@ -50,6 +51,11 @@ tiempo de símbolo $T_\text{symb}$ de 16 veces $T_s$.
 
 3. Graficar la densidad espectral de las señales `x` y `c` del punto anterior
     en escala semilogaritmica.
+    A diferencia del punto 1, dónde los pulsos tenían un pico de altura 1,
+    para este caso se deben normalizar los pulsos para que tengan energía igual a 1.
+    Para ello dividir al pulso por su energía utilizando la siguiente ecuación:
+    ![Coseno elevado](./images/raised_cosine.png)
+    Notar que se utiliza la versión de tiempo continuo de la energía.
 
 4. Suba el script a la carpeta de entrega.
 
