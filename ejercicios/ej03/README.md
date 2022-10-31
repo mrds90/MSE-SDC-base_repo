@@ -30,6 +30,7 @@ tiempo de símbolo $T_\text{symb}$ de 16 veces $T_s$.
       2. Pulso triangular.
       3. Pulso seno.
       4. Pulso coseno elevado.
+
           ![Coseno elevado](./images/raised_cosine.png)
 
       Todos los pulsos deben tener un pico de altura 1.
@@ -58,7 +59,8 @@ tiempo de símbolo $T_\text{symb}$ de 16 veces $T_s$.
     A diferencia del punto 1, dónde los pulsos tenían un pico de altura 1, para
     este caso se deben normalizar los pulsos para que tengan energía igual a 1.
     Para ello dividir al pulso por su energía utilizando la siguiente ecuación:
-    <img src="https://github.com/MSE-SDC/MSE-SDC-base_repo/blob/main/ejercicios/ej03/images/energy.png" width="400">
+
+    ![Signal energy](./images/energy.png)
 
     Aclaración: Se debe notar que la señal que se transmite es una señal de
     tiempo continuo y por lo tanto, el cálculo del espectro deberíamos hacerlo
