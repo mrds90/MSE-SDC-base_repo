@@ -9,10 +9,25 @@ use work.pkg_edu_bbt.all;
 -- entity
 entity top_edu_bbt is
   port(
-    clk_i   : in  std_logic;                    --system clock
-    arst_i  : in  std_logic;                    --ascynchronous reset
-    rx_i    : in  std_logic;                    --receive pin
-    tx_o    : out std_logic
+    clk_i              : in  std_logic;                    --system clock
+    arst_i             : in  std_logic;                    --ascynchronous reset
+    rx_i               : in  std_logic;                    --receive pin
+    tx_o               : out std_logic;                    --transmit pin
+    -- Config
+    nm1_bytes_s        : in std_logic_vector( 7 downto 0);
+    nm1_pre_s          : in std_logic_vector( 7 downto 0);
+    nm1_sfd_s          : in std_logic_vector( 7 downto 0);
+    det_th_s           : in std_logic_vector(15 downto 0);
+    pll_kp_s           : in std_logic_vector(15 downto 0);
+    pll_ki_s           : in std_logic_vector(15 downto 0);
+    -- Modem to channel
+    mod_os_data_o      : out std_logic_vector( 9 downto 0);
+    mod_os_dv_o        : out std_logic;
+    mod_os_rfd_i       : in  std_logic;
+    -- Channel to Modem
+    chan_os_data_i     : in  std_logic_vector( 9 downto 0);
+    chan_os_dv_i       : in  std_logic;
+    chan_os_rfd_o      : out std_logic
   );
 end entity top_edu_bbt;
 
@@ -63,33 +78,33 @@ architecture rtl of top_edu_bbt is
   signal modem_tx_rdy_s     : std_logic;
   signal modem_rx_ovf_s     : std_logic;
 
-  -- Modulator to channel output
-  signal mod_os_data_s  : std_logic_vector( 9 downto 0);
-  signal mod_os_dv_s    : std_logic;
-  signal mod_os_rfd_s   : std_logic;
-  -- Channel output
-  signal chan_os_data_s : std_logic_vector( 9 downto 0);
-  signal chan_os_dv_s   : std_logic;
-  signal chan_os_rfd_s  : std_logic;
+--   -- Modulator to channel output
+--   signal mod_os_data_s  : std_logic_vector( 9 downto 0);
+--   signal mod_os_dv_s    : std_logic;
+--   signal mod_os_rfd_s   : std_logic;
+--   -- Channel output
+--   signal chan_os_data_s : std_logic_vector( 9 downto 0);
+--   signal chan_os_dv_s   : std_logic;
+--   signal chan_os_rfd_s  : std_logic;
 
-  -- Modem config
-  constant nm1_bytes_c  : std_logic_vector( 7 downto 0) := X"03";
-  constant nm1_pre_c    : std_logic_vector( 7 downto 0) := X"07";
-  constant nm1_sfd_c    : std_logic_vector( 7 downto 0) := X"03";
-  constant det_th_c     : std_logic_vector(15 downto 0) := X"0040";
-  constant pll_kp_c     : std_logic_vector(15 downto 0) := X"A000";
-  constant pll_ki_c     : std_logic_vector(15 downto 0) := X"9000";
-  -- Channel config
-  constant sigma_c      : std_logic_vector(15 downto 0) := X"0040"; -- QU16.12
-  -- Modem config
-  signal nm1_bytes_s  : std_logic_vector( 7 downto 0);
-  signal nm1_pre_s    : std_logic_vector( 7 downto 0);
-  signal nm1_sfd_s    : std_logic_vector( 7 downto 0);
-  signal det_th_s     : std_logic_vector(15 downto 0);
-  signal pll_kp_s     : std_logic_vector(15 downto 0);
-  signal pll_ki_s     : std_logic_vector(15 downto 0);
-  -- Channel config
-  signal sigma_s      : std_logic_vector(15 downto 0);
+  ---- Modem config
+  --constant nm1_bytes_c  : std_logic_vector( 7 downto 0) := X"03";
+  --constant nm1_pre_c    : std_logic_vector( 7 downto 0) := X"07";
+  --constant nm1_sfd_c    : std_logic_vector( 7 downto 0) := X"03";
+  --constant det_th_c     : std_logic_vector(15 downto 0) := X"0040";
+  --constant pll_kp_c     : std_logic_vector(15 downto 0) := X"A000";
+  --constant pll_ki_c     : std_logic_vector(15 downto 0) := X"9000";
+  ---- Channel config
+  --constant sigma_c      : std_logic_vector(15 downto 0) := X"0040"; -- QU16.12
+  ---- Modem config
+  --signal nm1_bytes_s  : std_logic_vector( 7 downto 0);
+  --signal nm1_pre_s    : std_logic_vector( 7 downto 0);
+  --signal nm1_sfd_s    : std_logic_vector( 7 downto 0);
+  --signal det_th_s     : std_logic_vector(15 downto 0);
+  --signal pll_kp_s     : std_logic_vector(15 downto 0);
+  --signal pll_ki_s     : std_logic_vector(15 downto 0);
+  ---- Channel config
+  --signal sigma_s      : std_logic_vector(15 downto 0);
   ------------------------------------------------------------------------------
   
   -- ------------------------------------------------------------------------------
@@ -109,68 +124,25 @@ architecture rtl of top_edu_bbt is
   -- END COMPONENT;
   -- ------------------------------------------------------------------------------
 
-  ------------------------------------------------------------------------------
-  -- DEBUG SIGNALS
-  ------------------------------------------------------------------------------
-  -- ILA
-  signal tx_s : std_logic;
-  -- ILA component
-  COMPONENT ila_0
-  PORT (
-      clk : IN STD_LOGIC;
-      probe0 : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
-      probe1 : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
-      probe2 : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
-      probe3 : IN STD_LOGIC_VECTOR(0 DOWNTO 0)
-  );
-  END COMPONENT  ;
-  ------------------------------------------------------------------------------
+  --------------------------------------------------------------------------------
+  ---- DEBUG SIGNALS
+  --------------------------------------------------------------------------------
+  ---- ILA
+  --signal tx_s : std_logic;
+  ---- ILA component
+  --COMPONENT ila_0
+  --PORT (
+  --    clk : IN STD_LOGIC;
+  --    probe0 : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+  --    probe1 : IN STD_LOGIC_VECTOR(9 DOWNTO 0);
+  --    probe2 : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+  --    probe3 : IN STD_LOGIC_VECTOR(0 DOWNTO 0)
+  --);
+  --END COMPONENT  ;
+  --------------------------------------------------------------------------------
 
 begin
 
-
-  ------------------------------------------------------------------------------
-  -- ILA
-  ------------------------------------------------------------------------------
-  u_ila0 : ila_0
-  PORT MAP (
-    clk       => clk_i,
-    probe0    => mod_os_data_s,
-    probe1    => chan_os_data_s,
-    probe2    => rx_fifo_os_data_s,
-    probe3(0) => tx_s
-  );
-  ------------------------------------------------------------------------------
-  
-  
-  ------------------------------------------------------------------------------
-  -- Modem configuration
-  ------------------------------------------------------------------------------
-  -- your_instance_name : vio_0
-  -- PORT MAP (
-  --   clk => clk_i,
-  --   probe_out0 => nm1_bytes_s,
-  --   probe_out1 => nm1_pre_s,
-  --   probe_out2 => nm1_sfd_s,
-  --   probe_out3 => det_th_s,
-  --   probe_out4 => pll_kp_s,
-  --   probe_out5 => pll_ki_s,
-  --   probe_out6 => sigma_s
-  -- );
-  nm1_bytes_s <= nm1_bytes_s;
-  nm1_pre_s   <= nm1_pre_s;
-  nm1_sfd_s   <= nm1_sfd_s;
-  det_th_s    <= det_th_s;
-  pll_kp_s    <= pll_kp_s;
-  pll_ki_s    <= pll_ki_s;
-  sigma_s     <= sigma_s;
-  ------------------------------------------------------------------------------
-
-  
-  ------------------------------------------------------------------------------
-  tx_o <= tx_s;
-  ------------------------------------------------------------------------------
-  
 
   ------------------------------------------------------------------------------
   -- Generate synchronous reset
@@ -204,7 +176,7 @@ begin
       srst_i       => srst_s,
       -- Serial Interface
       rx_i         => rx_i,
-      tx_o         => tx_s,
+      tx_o         => tx_o,
       -- Input Stream Interface
       tx_is_data_i => rx_fifo_os_data_s,
       tx_is_dv_i   => rx_fifo_os_dv_s,
@@ -310,13 +282,13 @@ begin
     os_dv_o       => modem_os_dv_s,
     os_rfd_i      => modem_os_rfd_s,
     -- DAC Stream
-    dac_os_data_o => mod_os_data_s,
-    dac_os_dv_o   => mod_os_dv_s,
-    dac_os_rfd_i  => mod_os_rfd_s,
+    dac_os_data_o => mod_os_data_o,
+    dac_os_dv_o   => mod_os_dv_o,
+    dac_os_rfd_i  => mod_os_rfd_i,
     -- ADC Stream
-    adc_is_data_i => chan_os_data_s,
-    adc_is_dv_i   => chan_os_dv_s,
-    adc_is_rfd_o  => chan_os_rfd_s,
+    adc_is_data_i => chan_os_data_i,
+    adc_is_dv_i   => chan_os_dv_i,
+    adc_is_rfd_o  => chan_os_rfd_o,
     -- Config
     nm1_bytes_i   => nm1_bytes_s,
     nm1_pre_i     => nm1_pre_s,
@@ -356,30 +328,6 @@ begin
     empty_o      => rx_fifo_empty_s,
     full_o       => rx_fifo_full_s,
     data_count_o => rx_fifo_data_count_s
-  );
-  ------------------------------------------------------------------------------
-
-
-  ------------------------------------------------------------------------------
-  -- Channel
-  ------------------------------------------------------------------------------
-  u_channel : bb_channel
-  port map
-  (
-    -- clk, en, rst
-    clk_i         => clk_i,
-    en_i          => '1',
-    srst_i        => srst_s,
-    -- Input Stream
-    is_data_i     => mod_os_data_s,
-    is_dv_i       => mod_os_dv_s,
-    is_rfd_o      => mod_os_rfd_s,
-    -- Output Stream
-    os_data_o     => chan_os_data_s,
-    os_dv_o       => chan_os_dv_s,
-    os_rfd_i      => chan_os_rfd_s,
-    -- Control
-    sigma_i       => sigma_s
   );
   ------------------------------------------------------------------------------
 

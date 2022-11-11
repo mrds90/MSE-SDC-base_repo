@@ -137,7 +137,7 @@ begin
     -- tb_dut_is_data_i <= aux_v;
     if rising_edge(tb_dut_clk_i) then
       if tb_dut_is_rfd_o = '1' then
-        report "[INFO] Byte número:" & integer'image(i_v);
+        report "[INFO] Byte número " & integer'image(i_v);
         i_v    := i_v+1;
         byte_v := byte_v-1;
         aux_v  := not(aux_v);

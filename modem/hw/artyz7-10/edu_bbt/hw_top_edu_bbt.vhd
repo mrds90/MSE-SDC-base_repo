@@ -51,6 +51,25 @@ architecture rtl of hw_top_edu_bbt is
 
   signal counter_s : std_logic_vector(26 downto 0);
 
+  -- Modulator to channel output
+  signal mod_os_data_s  : std_logic_vector( 9 downto 0);
+  signal mod_os_dv_s    : std_logic;
+  signal mod_os_rfd_s   : std_logic;
+  -- Channel output
+  signal chan_os_data_s : std_logic_vector( 9 downto 0);
+  signal chan_os_dv_s   : std_logic;
+  signal chan_os_rfd_s  : std_logic;
+
+  -- Modem config
+  constant nm1_bytes_c  : std_logic_vector( 7 downto 0) := X"03";
+  constant nm1_pre_c    : std_logic_vector( 7 downto 0) := X"07";
+  constant nm1_sfd_c    : std_logic_vector( 7 downto 0) := X"03";
+  constant det_th_c     : std_logic_vector(15 downto 0) := X"0040";
+  constant pll_kp_c     : std_logic_vector(15 downto 0) := X"A000";
+  constant pll_ki_c     : std_logic_vector(15 downto 0) := X"9000";
+  -- Channel config
+  constant sigma_c      : std_logic_vector(15 downto 0) := X"0040"; -- QU16.12
+
 begin
 
   u_blinky : process(clk_s,arst_i)
@@ -81,19 +100,42 @@ begin
     clk_i  => clk_s,
     arst_i => arst_i,
     rx_i   => rx_i,
-    tx_o   => tx_o
-    -- rx_i   => rx_s(0),
-    -- tx_o   => tx_s(0)
+    tx_o   => tx_o,
+    -- Config
+    nm1_bytes_s => nm1_bytes_s,
+    nm1_pre_s   => nm1_pre_s,
+    nm1_sfd_s   => nm1_sfd_s,
+    det_th_s    => det_th_s,
+    pll_kp_s    => pll_kp_s,
+    pll_ki_s    => pll_ki_s,
+    -- Modem to channel
+    mod_os_data_o => mod_os_data_s,
+    mod_os_dv_o   => mod_os_dv_s,
+    mod_os_rfd_i  => mod_os_rfd_s,
+    -- Channel to Modem
+    chan_os_data_i => chan_os_data_s,
+    chan_os_dv_i   => chan_os_dv_s,
+    chan_os_rfd_o  => chan_os_rfd_s
   );
 
-  -- rx_s(0) <= rx_i;
-  -- tx_o    <= tx_s(0);
-  -- u_ila0 : ila_0
-  -- port map (
-  --   clk    => clk_s,
-  --   probe0 => rx_s,
-  --   probe1 => tx_s
-  -- );
+  u_channel : bb_channel
+  port map
+  (
+    -- clk, en, rst
+    clk_i         => clk_s,
+    en_i          => '1',
+    srst_i        => arst_i,
+    -- Input Stream
+    is_data_i     => mod_os_data_s,
+    is_dv_i       => mod_os_dv_s,
+    is_rfd_o      => mod_os_rfd_s,
+    -- Output Stream
+    os_data_o     => chan_os_data_s,
+    os_dv_o       => chan_os_dv_s,
+    os_rfd_i      => chan_os_rfd_s,
+    -- Control
+    sigma_i       => sigma_c
+  );
 
 end architecture;
 
