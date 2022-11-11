@@ -14,12 +14,12 @@ entity top_edu_bbt is
     rx_i               : in  std_logic;                    --receive pin
     tx_o               : out std_logic;                    --transmit pin
     -- Config
-    nm1_bytes_s        : in std_logic_vector( 7 downto 0);
-    nm1_pre_s          : in std_logic_vector( 7 downto 0);
-    nm1_sfd_s          : in std_logic_vector( 7 downto 0);
-    det_th_s           : in std_logic_vector(15 downto 0);
-    pll_kp_s           : in std_logic_vector(15 downto 0);
-    pll_ki_s           : in std_logic_vector(15 downto 0);
+    nm1_bytes_i        : in std_logic_vector( 7 downto 0);
+    nm1_pre_i          : in std_logic_vector( 7 downto 0);
+    nm1_sfd_i          : in std_logic_vector( 7 downto 0);
+    det_th_i           : in std_logic_vector(15 downto 0);
+    pll_kp_i           : in std_logic_vector(15 downto 0);
+    pll_ki_i           : in std_logic_vector(15 downto 0);
     -- Modem to channel
     mod_os_data_o      : out std_logic_vector( 9 downto 0);
     mod_os_dv_o        : out std_logic;
@@ -248,7 +248,7 @@ begin
         if modem_send_s = '1' then
           modem_send_s <= '0';
         else
-          if unsigned(pipe_data_counter_s) > unsigned(nm1_bytes_s) and modem_tx_rdy_s = '1' then
+          if unsigned(pipe_data_counter_s) > unsigned(nm1_bytes_i) and modem_tx_rdy_s = '1' then
             modem_send_s <= '1';
           end if;
         end if;
@@ -290,12 +290,12 @@ begin
     adc_is_dv_i   => chan_os_dv_i,
     adc_is_rfd_o  => chan_os_rfd_o,
     -- Config
-    nm1_bytes_i   => nm1_bytes_s,
-    nm1_pre_i     => nm1_pre_s,
-    nm1_sfd_i     => nm1_sfd_s,
-    det_th_i      => det_th_s,
-    pll_kp_i      => pll_kp_s,
-    pll_ki_i      => pll_ki_s,
+    nm1_bytes_i   => nm1_bytes_i,
+    nm1_pre_i     => nm1_pre_i,
+    nm1_sfd_i     => nm1_sfd_i,
+    det_th_i      => det_th_i,
+    pll_kp_i      => pll_kp_i,
+    pll_ki_i      => pll_ki_i,
     -- Control
     send_i        => modem_send_s,
     -- State

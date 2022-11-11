@@ -80,12 +80,12 @@ begin
     rx_i   => tb_dut_rx_i,
     tx_o   => tb_dut_tx_o,
     -- Config
-    nm1_bytes_s => nm1_bytes_c,
-    nm1_pre_s   => nm1_pre_c,
-    nm1_sfd_s   => nm1_sfd_c,
-    det_th_s    => det_th_c,
-    pll_kp_s    => pll_kp_c,
-    pll_ki_s    => pll_ki_c,
+    nm1_bytes_i => nm1_bytes_c,
+    nm1_pre_i   => nm1_pre_c,
+    nm1_sfd_i   => nm1_sfd_c,
+    det_th_i    => det_th_c,
+    pll_kp_i    => pll_kp_c,
+    pll_ki_i    => pll_ki_c,
     -- Modem to channel
     mod_os_data_o => mod_os_data_s,
     mod_os_dv_o   => mod_os_dv_s,

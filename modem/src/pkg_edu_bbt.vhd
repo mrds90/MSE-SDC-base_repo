@@ -28,12 +28,12 @@ package pkg_edu_bbt is
       rx_i               : in  std_logic;                    --receive pin
       tx_o               : out std_logic;                    --transmit pin
       -- Config
-      nm1_bytes_s        : in std_logic_vector( 7 downto 0);
-      nm1_pre_s          : in std_logic_vector( 7 downto 0);
-      nm1_sfd_s          : in std_logic_vector( 7 downto 0);
-      det_th_s           : in std_logic_vector(15 downto 0);
-      pll_kp_s           : in std_logic_vector(15 downto 0);
-      pll_ki_s           : in std_logic_vector(15 downto 0);
+      nm1_bytes_i        : in std_logic_vector( 7 downto 0);
+      nm1_pre_i          : in std_logic_vector( 7 downto 0);
+      nm1_sfd_i          : in std_logic_vector( 7 downto 0);
+      det_th_i           : in std_logic_vector(15 downto 0);
+      pll_kp_i           : in std_logic_vector(15 downto 0);
+      pll_ki_i           : in std_logic_vector(15 downto 0);
       -- Modem to channel
       mod_os_data_o      : out std_logic_vector( 9 downto 0);
       mod_os_dv_o        : out std_logic;
