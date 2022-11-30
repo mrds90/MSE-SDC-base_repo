@@ -51,7 +51,7 @@ explicación sobre lo que se está mostrando en cada caso.
 
 Se debe guardar el archivo de configuración del visualizador `gtkw` o `wcfg`
 (GTKWave o Vivado respectivamente) en la misma carpeta que el test, en este
-caso en la carpeta `MSE-SDC-repo/modem/verification/tb_modulator/`, de manera
+caso en la carpeta `MSE-SDC-repo/modem/verification/<nombre_del_test>/`, de manera
 que sea simple y rápido volver a visualizar las señales de acuerdo a la
 configuración utilizada por el alumno.
 
