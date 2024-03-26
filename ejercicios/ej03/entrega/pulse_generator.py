@@ -25,15 +25,14 @@ def SinePulse(fs_MHz: float, f0_MHz: float, samples: int) -> np.ndarray:
     return signal
 
 
-def RaisedCosinePulse(fs_MHz: float, samples: int) -> np.ndarray:
+def RaisedCosinePulse(fs_MHz: float, beta: float, samples: int) -> np.ndarray:
+
+    Ts = 1/fs_MHz
     t_us = TimeVector(fs_MHz, samples)
 
-    a = 0.5
-    # Ensure the denominator is never zero
-    t_us[np.abs(t_us) < 1e-12] = 1e-12
-
-    # Calculate the raised cosine pulse
-    signal = np.cos(np.pi * t_us) / (1 - (2 * a * t_us) ** 2)
+    signal = (1 / Ts) * np.sinc(t_us / Ts) * np.cos(np.pi * beta * t_us / Ts) / (1 - (2 * beta * t_us / Ts) ** 2)
+    signal[np.isclose(t_us, Ts / (2 * beta))] = np.pi / (4 * Ts) * np.sinc(1 / (2 * beta))
+    signal[np.isclose(t_us, -Ts / (2 * beta))] = np.pi / (4 * Ts) * np.sinc(1 / (2 * beta))
     signal = signal/np.max(np.abs(signal))
 
     return signal

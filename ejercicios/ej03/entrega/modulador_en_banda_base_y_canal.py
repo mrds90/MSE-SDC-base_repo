@@ -3,6 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pulse_generator import *
 
+SQUARE = 0
+SINE = 1
+TRIANGULAR = 2
+RAISED_COSINE = 3
+
 fs_MHz = 16.0
 samples = 16
 f0_Mhz = 1
@@ -84,14 +89,14 @@ b = GenerateBinarySignal(N_SIGNAL_B)
 d = InsertZerosAndAssignValues(b, M)
 
 
-p = [
+p = (
     SquarePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
     SinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
     TriangularPulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
-    RaisedCosinePulse(fs_MHz=fs_MHz, samples=samples),
-]
+    RaisedCosinePulse(fs_MHz=fs_MHz, beta=1, samples=samples),
+)
 
-## Plot Singlas for debug
+# Plot Singlas for debug
 # t_us = TimeVector(fs_MHz, samples)
 # pulse_names = ["Square Pulse", "Sine Pulse", "Triangular Pulse", "Raised Cosine Pulse"]
 # for i, signal in enumerate(p):
@@ -106,13 +111,23 @@ p = [
 # Convolve each pulse with the input signal d to obtain the transmitted signal x
 # Use 'same' mode in np.convolve() to ensure that the output signal x has the same length as the input signal d,
 # thus maintaining synchronization between the signals d and x.
-x = [np.convolve(d, pulse, mode="same") for pulse in p]
+x = (
+    np.convolve(d, p[SQUARE], mode="same"),
+    np.convolve(d, p[SINE], mode="same"),
+    np.convolve(d, p[TRIANGULAR], mode="same"),
+    np.convolve(d, p[RAISED_COSINE], mode="same"),
+)
 # Add channel effects and noise
-c = [AddChannelNoise(x_signal, SNR_dB) for x_signal in x]
+c = (
+    AddChannelNoise(x[SQUARE], SNR_dB),
+    AddChannelNoise(x[SINE], SNR_dB),
+    AddChannelNoise(x[TRIANGULAR], SNR_dB),
+    AddChannelNoise(x[RAISED_COSINE], SNR_dB),
+)
 
 
 # Color Blind friendly colors
-CB_color_cycle = [
+CB_color_cycle = (
     "#377eb8",
     "#ff7f00",
     "#4daf4a",
@@ -122,13 +137,13 @@ CB_color_cycle = [
     "#999999",
     "#e41a1c",
     "#dede00",
-]
+)
 
 fig, ax = plt.subplots(4, figsize=(8, 10))
 
 fig.suptitle("Ejercicio 3", fontsize=16)
 
-pulses = ["Square", "Sine", "Triangular", "Raised Cosine"]
+pulses = ("Square", "Sine", "Triangular", "Raised Cosine")
 
 for i in range(4):
 
@@ -176,8 +191,8 @@ f = np.fft.fftfreq(len(x[0]))
 fig, ax = plt.subplots(2, figsize=(10, 8))
 
 for i in range(4):
-    ax[0].semilogy(f, x_spectrum[i], label=f"Pulse {i+1}")
-    ax[1].semilogy(f, c_spectrum[i], label=f"Pulse {i+1}")
+    ax[0].semilogy(f, x_spectrum[i], label=pulses[i], color = CB_color_cycle[i])
+    ax[1].semilogy(f, c_spectrum[i], label=pulses[i], color = CB_color_cycle[i])
 
 ax[0].set_title("Spectral Density of Transmitted Signals (x)")
 ax[0].set_xlabel("Frequency (MHz)")
