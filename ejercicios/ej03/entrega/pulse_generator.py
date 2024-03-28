@@ -9,6 +9,8 @@ def TimeVector(fs_MHz: float, samples: int) -> np.ndarray:
 def SquarePulse(fs_MHz: float, f0_MHz: float, samples: int) -> np.ndarray:
     t_us = TimeVector(fs_MHz, samples)
     signal = np.sign(np.sin(2 * np.pi * f0_MHz * t_us))
+    signal[signal < 0] = 0
+    
 
     return signal
 
@@ -25,14 +27,15 @@ def SinePulse(fs_MHz: float, f0_MHz: float, samples: int) -> np.ndarray:
     return signal
 
 
-def RaisedCosinePulse(fs_MHz: float, beta: float, samples: int) -> np.ndarray:
+def RaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int) -> np.ndarray:
 
-    Ts = 1/fs_MHz
-    t_us = TimeVector(fs_MHz, samples)
-
-    signal = (1 / Ts) * np.sinc(t_us / Ts) * np.cos(np.pi * beta * t_us / Ts) / (1 - (2 * beta * t_us / Ts) ** 2)
-    signal[np.isclose(t_us, Ts / (2 * beta))] = np.pi / (4 * Ts) * np.sinc(1 / (2 * beta))
-    signal[np.isclose(t_us, -Ts / (2 * beta))] = np.pi / (4 * Ts) * np.sinc(1 / (2 * beta))
-    signal = signal/np.max(np.abs(signal))
+    
+    t = np.arange(-samples, samples) / fs_MHz
+    T0=1/f0_MHz
+    
+    signal = 1/T0*np.sinc(t/T0)*np.cos(np.pi*beta*t/T0)/(1-(2*beta*t/T0)**2)
+    signal[t==T0/2/beta] = np.pi/4/T0*np.sinc(1/2/beta)
+    signal[t==-T0/2/beta] = np.pi/4/T0*np.sinc(1/2/beta)
+    
 
     return signal

@@ -13,11 +13,11 @@ samples = 16
 f0_Mhz = 1
 M = samples
 N = samples
-N_SIGNAL_B = 10
+N_SIGNAL_B = 1000
 SNR_dB = 10  # Signal-to-noise ratio in dB
 
 print("Periodo de muestreo : {} µS".format(1 / fs_MHz))
-print("Tiempo de simbolo : {} µS".format((1 / fs_MHz) * samples))
+print("Tiempo de símbolo : {} µS".format((1 / fs_MHz) * samples))
 print("Frecuencia de muestreo : {} MHz".format(fs_MHz))
 
 
@@ -93,14 +93,16 @@ p = (
     SquarePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
     SinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
     TriangularPulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
-    RaisedCosinePulse(fs_MHz=fs_MHz, beta=1, samples=samples),
+    RaisedCosinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz,  beta=0.5, samples=samples),
 )
 
 # Plot Singlas for debug
 # t_us = TimeVector(fs_MHz, samples)
-# pulse_names = ["Square Pulse", "Sine Pulse", "Triangular Pulse", "Raised Cosine Pulse"]
+pulse_names = ["Square Pulse", "Sine Pulse", "Triangular Pulse", "Raised Cosine Pulse"]
 # for i, signal in enumerate(p):
-#     plt.plot(t_us, signal, label=pulse_names[i])
+#     if(i==3):
+#         t_us = TimeVector(fs_MHz, 2*samples)     
+#     plt.scatter(t_us, signal, label=pulse_names[i])
 #     plt.xlabel("Time (µs)")
 #     plt.ylabel("Amplitude")
 #     plt.title("Signal: {}".format(pulse_names[i]))
@@ -139,40 +141,40 @@ CB_color_cycle = (
     "#dede00",
 )
 
-fig, ax = plt.subplots(4, figsize=(8, 10))
+# fig, ax = plt.subplots(4, figsize=(8, 10))
 
-fig.suptitle("Ejercicio 3", fontsize=16)
+# fig.suptitle("Ejercicio 3", fontsize=16)
 
 pulses = ("Square", "Sine", "Triangular", "Raised Cosine")
 
-for i in range(4):
+# for i in range(4):
 
-    markerline, stemlines, baseline = ax[i].stem(
-        np.arange(len(x[i])), x[i], markerfmt="o", label="Output"
-    )
-    plt.setp(stemlines, "color", CB_color_cycle[1])
-    plt.setp(stemlines, "linestyle", "dotted")
+#     markerline, stemlines, baseline = ax[i].stem(
+#         np.arange(len(x[i])), x[i], markerfmt="o", label="Output"
+#     )
+#     plt.setp(stemlines, "color", CB_color_cycle[1])
+#     plt.setp(stemlines, "linestyle", "dotted")
 
-    markerline, stemlines, baseline = ax[i].stem(
-        np.arange(len(c[i])), c[i], markerfmt="o", label="Output+Noise"
-    )
-    plt.setp(stemlines, "color", CB_color_cycle[2])
-    plt.setp(stemlines, "linestyle", "dotted")
+#     markerline, stemlines, baseline = ax[i].stem(
+#         np.arange(len(c[i])), c[i], markerfmt="o", label="Output+Noise"
+#     )
+#     plt.setp(stemlines, "color", CB_color_cycle[2])
+#     plt.setp(stemlines, "linestyle", "dotted")
 
-    markerline, stemlines, baseline = ax[i].stem(
-        np.arange(len(d)), d, markerfmt="o", label="Deltas"
-    )
-    plt.setp(stemlines, "color", CB_color_cycle[0])
-    plt.setp(stemlines, "linestyle", "dotted")
+#     markerline, stemlines, baseline = ax[i].stem(
+#         np.arange(len(d)), d, markerfmt="o", label="Deltas"
+#     )
+#     plt.setp(stemlines, "color", CB_color_cycle[0])
+#     plt.setp(stemlines, "linestyle", "dotted")
 
-    ax[i].set_xlabel("Samples")
-    ax[i].set_ylabel("Value")
-    ax[i].set_title("Pulse Type: {}".format(pulses[i]))
-    ax[i].legend()
-    ax[i].grid(True)
+#     ax[i].set_xlabel("Samples")
+#     ax[i].set_ylabel("Value")
+#     ax[i].set_title("Pulse Type: {}".format(pulses[i]))
+#     ax[i].legend()
+#     ax[i].grid(True)
 
-plt.tight_layout()
-plt.show()
+# plt.tight_layout()
+# plt.show()
 
 
 from scipy.fft import fft
@@ -181,30 +183,31 @@ from scipy.fft import fft
 normalized_pulses = [pulse / np.sqrt(np.sum(pulse**2)) for pulse in p]
 
 # Calculate spectra
-x_spectrum = [np.abs(fft(x_signal)) for x_signal in x]
-c_spectrum = [np.abs(fft(c_signal)) for c_signal in c]
+x_spectrum = [(20 * np.log10(np.abs(fft(x_signal)))) for x_signal in x]
+c_spectrum = [(20 * np.log10(np.abs(fft(c_signal)))) for c_signal in c]
 
 # Frequency axis
-f = np.fft.fftfreq(len(x[0]))
+f = np.fft.fftfreq(len(x[0]), 1/16)
 
 # Plot spectral density
-fig, ax = plt.subplots(2, figsize=(10, 8))
+fig, ax = plt.subplots(4, 2, figsize=(10, 12))
 
 for i in range(4):
-    ax[0].semilogy(f, x_spectrum[i], label=pulses[i], color = CB_color_cycle[i])
-    ax[1].semilogy(f, c_spectrum[i], label=pulses[i], color = CB_color_cycle[i])
+    ax[i, 0].semilogy(f[f > 0], x_spectrum[i][f > 0], label=pulses[i], color=CB_color_cycle[i])
+    ax[i, 1].semilogy(f[f > 0], c_spectrum[i][f > 0], label=pulses[i], color=CB_color_cycle[i])
 
-ax[0].set_title("Spectral Density of Transmitted Signals (x)")
-ax[0].set_xlabel("Frequency (MHz)")
-ax[0].set_ylabel("Magnitude")
-ax[0].legend()
-ax[0].grid(True)
+    ax[i, 0].set_title("Spectral Density of Transmitted Signals (x)")
+    ax[i, 0].set_xlabel("Frequency (MHz)")
+    ax[i, 0].set_ylabel("Magnitude")
+    ax[i, 0].legend()
+    ax[i, 0].grid(True)
 
-ax[1].set_title("Spectral Density of Received Signals (c)")
-ax[1].set_xlabel("Frequency (MHz)")
-ax[1].set_ylabel("Magnitude")
-ax[1].legend()
-ax[1].grid(True)
+    ax[i, 1].set_title("Spectral Density of Received Signals (c)")
+    ax[i, 1].set_xlabel("Frequency (MHz)")
+    ax[i, 1].set_ylabel("Magnitude")
+    ax[i, 1].legend()
+    ax[i, 1].grid(True)
 
 plt.tight_layout()
 plt.show()
+
