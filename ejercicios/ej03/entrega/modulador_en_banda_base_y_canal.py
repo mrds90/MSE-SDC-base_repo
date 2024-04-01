@@ -1,8 +1,10 @@
 import random
 import numpy as np
 import matplotlib.pyplot as plt
-from pulse_generator import *
 from scipy.fft import fft
+import sys
+sys.path.append('../..')
+from Pulse_Generator import *
 
 SQUARE = 0
 SINE = 1
