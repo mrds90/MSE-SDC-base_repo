@@ -2,6 +2,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 from pulse_generator import *
+from scipy.fft import fft
 
 SQUARE = 0
 SINE = 1
@@ -13,7 +14,7 @@ samples = 16
 f0_Mhz = 1
 M = samples
 N = samples
-N_SIGNAL_B = 1000
+N_SIGNAL_B = 6 * 100
 SNR_dB = 10  # Signal-to-noise ratio in dB
 
 print("Periodo de muestreo : {} µS".format(1 / fs_MHz))
@@ -97,8 +98,8 @@ p = (
 )
 
 # Plot Singlas for debug
-# t_us = TimeVector(fs_MHz, samples)
 pulse_names = ["Square Pulse", "Sine Pulse", "Triangular Pulse", "Raised Cosine Pulse"]
+t_us = TimeVector(fs_MHz, samples)
 # for i, signal in enumerate(p):
 #     if(i==3):
 #         t_us = TimeVector(fs_MHz, 2*samples)     
@@ -141,43 +142,44 @@ CB_color_cycle = (
     "#dede00",
 )
 
-# fig, ax = plt.subplots(4, figsize=(8, 10))
+fig, ax = plt.subplots(4, figsize=(8, 10))
 
-# fig.suptitle("Ejercicio 3", fontsize=16)
+fig.suptitle("Ejercicio 3", fontsize=16)
 
 pulses = ("Square", "Sine", "Triangular", "Raised Cosine")
 
-# for i in range(4):
+for i in range(4):
 
-#     markerline, stemlines, baseline = ax[i].stem(
-#         np.arange(len(x[i])), x[i], markerfmt="o", label="Output"
-#     )
-#     plt.setp(stemlines, "color", CB_color_cycle[1])
-#     plt.setp(stemlines, "linestyle", "dotted")
+    markerline, stemlines, baseline = ax[i].stem(
+        np.arange(int(len(x[i])/100)), x[i][0:int(len(x[i])/100)], markerfmt="o", label="Output"
+    )
+    plt.setp(stemlines, "color", CB_color_cycle[0])
+    plt.setp(markerline, "color", CB_color_cycle[0])
+    plt.setp(stemlines, "linestyle", "dotted")
 
-#     markerline, stemlines, baseline = ax[i].stem(
-#         np.arange(len(c[i])), c[i], markerfmt="o", label="Output+Noise"
-#     )
-#     plt.setp(stemlines, "color", CB_color_cycle[2])
-#     plt.setp(stemlines, "linestyle", "dotted")
+    markerline, stemlines, baseline = ax[i].stem(
+        np.arange(int(len(c[i])/100)), c[i][0:int(len(c[i])/100)], markerfmt="o", label="Output+Noise"
+    )
+    plt.setp(stemlines, "color", CB_color_cycle[1])
+    plt.setp(markerline, "color", CB_color_cycle[1])
+    plt.setp(stemlines, "linestyle", "dotted")
 
-#     markerline, stemlines, baseline = ax[i].stem(
-#         np.arange(len(d)), d, markerfmt="o", label="Deltas"
-#     )
-#     plt.setp(stemlines, "color", CB_color_cycle[0])
-#     plt.setp(stemlines, "linestyle", "dotted")
+    markerline, stemlines, baseline = ax[i].stem(
+        np.arange(int(len(d)/100)), d[0:int(len(d)/100)], markerfmt="o", label="Deltas"
+    )
+    plt.setp(stemlines, "color", CB_color_cycle[3])
+    plt.setp(markerline, "color", CB_color_cycle[3])
+    # plt.setp(stemlines, "linestyle", "dotted")
 
-#     ax[i].set_xlabel("Samples")
-#     ax[i].set_ylabel("Value")
-#     ax[i].set_title("Pulse Type: {}".format(pulses[i]))
-#     ax[i].legend()
-#     ax[i].grid(True)
+    ax[i].set_xlabel("Samples")
+    ax[i].set_ylabel("Value")
+    ax[i].set_title("Pulse Type: {}".format(pulses[i]))
+    ax[i].legend()
+    ax[i].grid(True)
 
-# plt.tight_layout()
-# plt.show()
+plt.tight_layout()
+plt.show()
 
-
-from scipy.fft import fft
 
 # Normalize pulses
 normalized_pulses = [pulse / np.sqrt(np.sum(pulse**2)) for pulse in p]

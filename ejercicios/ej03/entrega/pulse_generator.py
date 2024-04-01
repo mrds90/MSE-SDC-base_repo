@@ -2,7 +2,7 @@ import numpy as np
 
 
 def TimeVector(fs_MHz: float, samples: int) -> np.ndarray:
-    t_us = np.arange(0, samples) / fs_MHz
+    t_us = np.arange(1, samples + 1) / fs_MHz
     return t_us
 
 
@@ -17,7 +17,7 @@ def SquarePulse(fs_MHz: float, f0_MHz: float, samples: int) -> np.ndarray:
 
 def TriangularPulse(fs_MHz: float, f0_MHz: float, samples: int) -> np.ndarray:
     t_us = TimeVector(fs_MHz, samples)
-    signal = (2 / np.pi) * np.arcsin(np.sin(2 * np.pi * f0_MHz * t_us))
+    signal = (2 / np.pi) * np.arcsin(np.sin(2 * np.pi * (f0_MHz/2) * t_us))
     return signal
 
 
@@ -30,7 +30,7 @@ def SinePulse(fs_MHz: float, f0_MHz: float, samples: int) -> np.ndarray:
 def RaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int) -> np.ndarray:
 
     
-    t = np.arange(-samples, samples) / fs_MHz
+    t = np.arange(-samples + 1, samples + 1) / fs_MHz
     T0=1/f0_MHz
     
     signal = 1/T0*np.sinc(t/T0)*np.cos(np.pi*beta*t/T0)/(1-(2*beta*t/T0)**2)
