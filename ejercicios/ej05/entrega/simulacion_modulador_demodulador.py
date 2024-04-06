@@ -6,6 +6,22 @@ import sys
 sys.path.append('../..')
 from Pulse_Generator import *
 
+# # invalid 
+delta_phase = 360
+selected_channel_type = -1
+selected_pulse_index = 6
+SNR_dB = -1  # Valido solo mayores a 0.
+
+
+# delta_phase = 0
+# selected_channel_type = 0
+# selected_pulse_index = 1
+# SNR_dB = 50
+
+fs_MHz = 16.0
+f0_Mhz = 1
+samples = 16
+N_SIGNAL_B = 10
 
 CB_color_cycle = (
     "#377eb8",
@@ -23,9 +39,90 @@ pulse_names = ("Square", "Sine", "Triangular", "Raised Cosine", "Root Raised Cos
 channel_names = ("Delta", "Delta (90°)", "Low Pass Filter")
 
 
-import matplotlib.pyplot as plt
+def PlotComplexSignalDual(signal, reference_signal, num_stages, title="Signal", reference_label="Deltas", pulse="Pulso", fs_MHz=16.0, CB_color_cycle=None):
+    if CB_color_cycle is None:
+        CB_color_cycle = (
+            "#377eb8",
+            "#ff7f00",
+            "#4daf4a",
+            "#f781bf",
+            "#a65628",
+            "#984ea3",
+            "#999999",
+            "#e41a1c",
+            "#dede00",
+        )
 
-import matplotlib.pyplot as plt
+    # Incremental counter to keep track of the number of times the function has been called
+    PlotComplexSignalDual.call_counter = getattr(PlotComplexSignalDual, "call_counter", 0)
+    
+    t_us = np.linspace(0, len(signal)/fs_MHz, len(signal))
+
+    # Create the figure if it's the first call
+    if PlotComplexSignalDual.call_counter == 0:
+        fig, axes = plt.subplots(num_stages, 2, figsize=(15, 8*num_stages//2), sharex=True)
+        PlotComplexSignalDual.fig = fig
+        PlotComplexSignalDual.axes = axes
+    else:
+        fig = PlotComplexSignalDual.fig
+        axes = PlotComplexSignalDual.axes
+
+    # Calculate row and column index for the subplot
+    row_idx = int(PlotComplexSignalDual.call_counter)
+        
+
+    t_us = np.linspace(0, len(signal)/fs_MHz, len(signal))
+
+    # Plot signal
+    markerline, stemlines, baseline = axes[row_idx, 0].stem(t_us, np.real(signal), markerfmt="o", label=f"{pulse} real" )
+    plt.setp(stemlines, "color", CB_color_cycle[0])
+    plt.setp(markerline, "color", CB_color_cycle[0])
+    plt.setp(stemlines, "linestyle", "dotted")
+    
+
+    # Plot reference signal with alpha and stem style
+    t_us = np.linspace(0, len(reference_signal)/fs_MHz, len(reference_signal))
+    markerline, stemlines, baseline = axes[row_idx, 0].stem(t_us, np.real(reference_signal), markerfmt="D", label=reference_label)
+    plt.setp(stemlines, "color", CB_color_cycle[1], alpha=0.7)
+    plt.setp(markerline, "color", CB_color_cycle[1], alpha=0.7)
+    plt.setp(stemlines, "linestyle", "-")  # Change linestyle to stem style
+    plt.setp(markerline, "markersize", 3)
+
+    axes[row_idx, 0].legend()
+    axes[row_idx, 0].grid(True, which='major', color='gray', linestyle='-', linewidth=1, alpha=0.8)
+    axes[row_idx, 0].grid(True, which='minor', color='gray', linestyle='--', linewidth=0.5, alpha=0.5)
+    axes[row_idx, 0].minorticks_on()
+
+    t_us = np.linspace(0, len(signal)/fs_MHz, len(signal))
+    markerline, stemlines, baseline = axes[row_idx, 1].stem(t_us, np.imag(signal), markerfmt="o", label=f"{pulse} imag")
+    plt.setp(stemlines, "color", CB_color_cycle[0])
+    plt.setp(markerline, "color", CB_color_cycle[0])
+    plt.setp(stemlines, "linestyle", "dotted")
+    
+
+    t_us = np.linspace(0, len(reference_signal)/fs_MHz, len(reference_signal))
+    markerline, stemlines, baseline = axes[row_idx, 1].stem(t_us, np.imag(reference_signal), markerfmt="D", label=reference_label)
+    plt.setp(stemlines, "color", CB_color_cycle[1], alpha=0.7)
+    plt.setp(markerline, "color", CB_color_cycle[1], alpha=0.7)
+    plt.setp(stemlines, "linestyle", "-")  # Change linestyle to stem style
+    plt.setp(markerline, "markersize", 3)
+
+    axes[row_idx, 1].legend()
+    axes[row_idx, 1].grid(True, which='major', color='gray', linestyle='-', linewidth=1, alpha=0.8)
+    axes[row_idx, 1].grid(True, which='minor', color='gray', linestyle='--', linewidth=0.5, alpha=0.5)
+    axes[row_idx, 1].minorticks_on()
+
+    # Set title to the center subplot of each row
+    axes[row_idx, 0].set_title(title, loc='center')
+
+    # Increment the call counter
+    PlotComplexSignalDual.call_counter += 1
+
+    # Show the figure after all calls
+    if PlotComplexSignalDual.call_counter == num_stages:
+        PlotComplexSignalDual.call_counter = 0
+        plt.tight_layout()
+        plt.show()
 
 def PlotComplexSignal(signal, reference_signal, title="Signal", reference_label="Deltas", pulse="Pulso", fs_MHz=16.0, CB_color_cycle=None):
     if CB_color_cycle is None:
@@ -45,7 +142,7 @@ def PlotComplexSignal(signal, reference_signal, title="Signal", reference_label=
     t_us = TimeVector(fs_MHz, len(np.real(signal)))
 
     # Plot signal
-    markerline, stemlines, baseline = axes[0].stem(t_us, np.real(signal), markerfmt="o", label=f"{pulse} real", )
+    markerline, stemlines, baseline = axes[0].stem(t_us, np.real(signal), markerfmt="o", label=f"{pulse} real")
     plt.setp(stemlines, "color", CB_color_cycle[0])
     plt.setp(markerline, "color", CB_color_cycle[0])
     plt.setp(stemlines, "linestyle", "dotted")
@@ -84,7 +181,7 @@ def PlotComplexSignal(signal, reference_signal, title="Signal", reference_label=
     axes[1].minorticks_on()
 
     plt.suptitle(title)
-    plt.tight_layout()
+    # plt.tight_layout()
     plt.show()
 
 
@@ -92,18 +189,6 @@ def PlotComplexSignal(signal, reference_signal, title="Signal", reference_label=
 
 # Parte 1: Generación de señales y simulación del sistema
 
-# Definición de parámetros del sistema
-fs_MHz = 16.0
-f0_Mhz = 1
-samples = 16
-N_SIGNAL_B = 6
-SNR_dB = 10
-
-# Generación de la señal binaria aleatoria
-b = GenerateBinarySignal(N_SIGNAL_B, complex=True)
-
-# Insertar ceros y asignar valores a la señal binaria
-d = InsertZerosAndAssignValues(b, samples)
 
 # Generar pulsos
 pulses = (
@@ -114,102 +199,132 @@ pulses = (
     RootRaisedCosinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, beta=0.5, samples=samples),
 )
 
-delta_phase = 0
-channel = "Delta"
-# Menú interactivo para elegir el tipo de pulso
-print("Seleccione el tipo de pulso:")
-for i, pulse in enumerate(pulse_names):
-    print(f"{i+1}. {pulse}")
 
-selected_pulse_index = input("Ingrese el número correspondiente al tipo de pulso: ")
-try:
-    selected_pulse_index = int(selected_pulse_index) - 1
-    if selected_pulse_index < 0 or selected_pulse_index >= len(pulse_names):
-        raise ValueError
-except ValueError:
-    print("Entrada inválida. Se seleccionará el primer tipo de pulso por defecto.")
-    selected_pulse_index = 0
+# Validación de parámetros
+if selected_channel_type not in (0, 1):
+    selected_channel_type = int(input("0 - Delta\n1 - Pasa Bajos\nIngrese el número correspondiente al tipo de canal: "))
+    
+if selected_channel_type == 0:  
+    if not 0 <= delta_phase < 360:
+        delta_phase = float(input("Ingrese la cantidad de grados [0 a 360) para el tipo de canal Delta: "))
+else:
+    delta_phase = 0
+    
+if not 0 <= selected_pulse_index < len(pulses):
+    print("Seleccione el tipo de pulso:")
+    for i, pulse in enumerate(pulse_names):
+        print(f"{i + 1}. {pulse}")
+    selected_pulse_index = int(input("Ingrese el número correspondiente al tipo de pulso: ")) - 1
 
+if SNR_dB <= 0:
+    SNR_dB = float(input("Ingrese la relación señal-ruido (SNR) en dB (debe ser mayor a 0): "))
+
+# Definir el pulso seleccionado
 selected_pulse = pulses[selected_pulse_index]
 
-# Definir la función para mostrar el menú de selección del tipo de canal Delta
-def choose_delta_phase() -> float:
-    while True:
-        delta_phase = input("Ingrese la cantidad de grados [0 a 360) para el tipo de canal Delta: ")
-        try:
-            delta_phase = float(delta_phase)
-            if 0 <= delta_phase < 360:
-                return delta_phase
-            else:
-                print("La cantidad de grados debe estar en el rango de 0 a 360.")
-        except ValueError:
-            print("Entrada inválida. Por favor, ingrese un número válido.")
-
-# Menú interactivo para elegir el tipo de canal
-print("\nSeleccione el tipo de canal:")
-print("1. Delta")
-print("2. Pasa Bajos")
-
-selected_channel_type = input("Ingrese el número correspondiente al tipo de canal: ")
-try:
-    selected_channel_type = int(selected_channel_type)
-    if selected_channel_type not in (1, 2):
-        raise ValueError
-except ValueError:
-    print("Entrada inválida. Se seleccionará Delta por defecto.")
-    selected_channel_type = 1
-
-if selected_channel_type == 1:  # Si se selecciona Delta
-    delta_phase = choose_delta_phase()
+# Definir el canal según el tipo seleccionado
+if selected_channel_type == 0:  # Si se selecciona Delta
+    if not 0 <= delta_phase < 360:
+        delta_phase = float(input("Ingrese la cantidad de grados [0 a 360) para el tipo de canal Delta: "))
+    channel = "Delta"
     h = DeltaPulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples, phase=delta_phase)
-    # plt.scatter(np.arange(samples), h)
-    # plt.show()
 else:  # Si se selecciona Pasa Bajos
-    channel = "Low Pass Filter"
-    h = LowPassFilterFIR(fs_MHz=fs_MHz, fc_MHz=fs_MHz / 4, order=samples)
+    channel = "Pasa Bajos"
+    h = LowPassFilterFIR(fs_MHz=fs_MHz, fc_MHz=fs_MHz / 20, order=samples)
 
-# Menú interactivo para elegir la relación señal-ruido (SNR)
-selected_snr = input("Ingrese la relación señal-ruido (SNR) en dB: ")
-try:
-    SNR_dB = float(selected_snr)
-except ValueError:
-    print("Entrada inválida. Se utilizará un SNR de 10 dB por defecto.")
-    SNR_dB = 10
+# Solicitar la relación señal-ruido (SNR)
+if SNR_dB <= 0:
+    SNR_dB = float(input("Ingrese la relación señal-ruido (SNR) en dB (debe ser mayor a 0): "))
 
-# Realizar el resto del proceso con el SNR y el tipo de canal seleccionados
+# Realizar el resto del proceso con los parámetros válidos
 
 
+
+
+# Generación de la señal binaria aleatoria
+b = GenerateBinarySignal(N_SIGNAL_B, complex=True)
+
+# Insertar ceros y asignar valores a la señal binaria
+d = InsertZerosAndAssignValues(b, samples)
 
 # Realizar la convolución para el caso seleccionado
 discard_length = ((len(selected_pulse)) - 1) // 2
-x = np.convolve(d, selected_pulse)[discard_length:-(discard_length + 1)]
+d_sync = np.zeros(discard_length + len(d), dtype=np.complex128)
+d_sync[discard_length:] = d
+x = np.convolve(d, selected_pulse)[:-(discard_length + 1)]
 
-PlotComplexSignal(x, d, reference_label="Deltas", title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" a transmitir",pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
+
+PlotComplexSignalDual(x, d_sync,num_stages=4, reference_label="Deltas", title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" a transmitir",pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
+# PlotComplexSignal(x, d, reference_label="Deltas", title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" a transmitir",pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
 
 discard_lengths_h = (len(h) - 1)
-xh = np.convolve(x, h)[:-discard_lengths_h]
+if(selected_channel_type == 0):
+    xh = np.convolve(x, h)[:-discard_lengths_h]
+else:
+    xh = np.convolve(x, h)[int(discard_lengths_h/2)+1:-int(discard_lengths_h/2)]
 
-PlotComplexSignal(xh, d, reference_label="Deltas", title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" y defasaje de {delta_phase}", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
+
+
+PlotComplexSignalDual(xh, d_sync, num_stages=4, reference_label="Deltas", title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" y defasaje de {delta_phase}", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
+# PlotComplexSignal(xh, d, reference_label="Deltas", title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" y defasaje de {delta_phase}", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
 
 # Agregar ruido al resultado
 c = AddChannelNoise(xh, SNR_dB)
 
+
 # Graficar el resultado
-PlotComplexSignal(c, d, reference_label="Deltas",title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" con un SNR de {SNR_dB} [dBs] y defasaje de {delta_phase}", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
+PlotComplexSignalDual(c, d_sync,num_stages=4, reference_label="Deltas",title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" con un SNR de {SNR_dB} [dBs] y defasaje de {delta_phase}", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
+# PlotComplexSignal(c, d, reference_label="Deltas",title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" con un SNR de {SNR_dB} [dBs] y defasaje de {delta_phase}", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
 
 
 discard_length = ((len(selected_pulse)) - 1) // 2
-y = np.convolve(c, selected_pulse)[discard_length:-(discard_length+1)]  # Scale the pulse
-y = np.real(y) / np.max(np.abs(np.real(y))) + 1j * np.imag(y) / np.max(np.abs(np.imag(y)))
+selected_pulse_normalized = selected_pulse / np.sum(np.abs(selected_pulse))
+ 
+SquarePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
+SinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
+TriangularPulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
+RaisedCosinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, beta=0.5, samples=samples),
+RootRaisedCosinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, beta=0.5, samples=samples),
 
-PlotComplexSignal(y, d, reference_label="Deltas",title=f"Señal recibida con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" con un SNR de {SNR_dB} [dBs] y defasaje de {delta_phase} después del FIR", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
+adjust_factor = (1, 1.267869510755348, 1.4879795574889882, 1.5195511971782591, 1.3614806367722807)
 
-b_received = y[d!=0]
+y = adjust_factor[selected_pulse_index] * np.convolve(c, selected_pulse_normalized)[discard_length:-(discard_length+1)]  # Scale the pulse
+
+b_received = y[d_sync!=0]
+
+b_with_noise = ((np.real(b_received)))+1j*((np.imag(b_received)))
 
 b_received = np.sign((np.real(b_received)))+1j*np.sign((np.imag(b_received)))
 
 
-error = np.array([np.sign((np.real(b_received))) != np.sign((np.real(b)))]).sum() + np.array([np.sign((np.imag(b_received))) != np.sign((np.imag(b)))]).sum()
-print(f"cantidad de errores con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" con un SNR de {SNR_dB} [dBs] y defasaje de {delta_phase}  : {error}")
 
-PlotComplexSignal(b_received, b, reference_label="Original",title=f"Bits recibidos con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" con un SNR de {SNR_dB} [dBs] y defasaje de {delta_phase} despues del FIR", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
+error = np.array([np.sign((np.real(b_received))) != np.sign((np.real(b)))]).sum() + np.array([np.sign((np.imag(b_received))) != np.sign((np.imag(b)))]).sum()
+print(f"cantidad de errores con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" con un SNR de {SNR_dB} [dBs] y defasaje de {delta_phase}  : {error} ({error/(2*N_SIGNAL_B) * 100:.2f}%)")
+
+
+
+PlotComplexSignalDual(y, d_sync,num_stages=4, reference_label="Deltas",title=f"Señal recibida con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" con un SNR de {SNR_dB} [dBs] y defasaje de {delta_phase} después del FIR", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
+
+PlotComplexSignal(b_with_noise, b, reference_label="Original",title=f"Bits recibidos con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" con un SNR de {SNR_dB} [dBs] y defasaje de {delta_phase} después del FIR", pulse="Bits recibidos", fs_MHz=fs_MHz)
+
+plt.scatter(np.real(b), np.imag(b), marker='o', color=CB_color_cycle[1], label="Transmitido")
+plt.scatter(np.real(b_with_noise), np.imag(b_with_noise), marker='D', s=3, color=CB_color_cycle[0], label="Recibido")
+
+plt.axhline(0, color='black', linewidth=1)  # Eje horizontal en y=0
+plt.axvline(0, color='black', linewidth=1)  # Eje vertical en x=0
+
+# Agregar título y etiquetas de los ejes
+plt.title("Constelación")
+plt.xlabel("Parte Real")
+plt.ylabel("Parte Imaginaria")
+
+# Agregar la leyenda
+plt.legend()
+
+# Agregar grid mayor y menor
+plt.grid(True, which='major', color='gray', linestyle='-', linewidth=0.8, alpha=0.8)
+plt.grid(True, which='minor', color='gray', linestyle='--', linewidth=0.4, alpha=0.5)
+plt.minorticks_on()
+
+# Mostrar el gráfico
+plt.show()

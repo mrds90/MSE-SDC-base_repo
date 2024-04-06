@@ -157,7 +157,7 @@ def SinePulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = False)
 
 def RaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int, complex: bool = False) -> np.ndarray:
 
-    t = np.arange(-2 * samples + 1,  2 * samples + 1) / fs_MHz
+    t = np.arange(-3 * samples + 1,  3 * samples + 1) / fs_MHz
     T0=1/f0_MHz
     
     signal = np.zeros_like(t)
@@ -176,7 +176,7 @@ def RaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int, co
 
 
 def RootRaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int, complex: bool = False) -> np.ndarray:
-    t = np.arange(-2 * samples + 1,  2 * samples + 1) / fs_MHz
+    t = np.arange(-3 * samples + 1,  3 * samples + 1) / fs_MHz
     T0=1/f0_MHz
     a = np.sin(np.pi*t/T0*(1-beta)) + 4*beta*t/T0*np.cos(np.pi*t/T0*(1+beta))
     b = np.pi*t/T0*(1-(4*beta*t/T0)**2)
