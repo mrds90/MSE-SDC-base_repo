@@ -40,7 +40,7 @@ N_ZEROS = 123; % Length of zero samples before signal
 % ----------------------------------------
 kzeros = Ts*N_ZEROS;
 khalfp = Ts*(n_fir-1)/2;
-kmod   = Tsymb*(spar.n_pre+2+spar.n_bytes*8);
+kmod   = Tsymb*(spar.n_pre + spar.n_sfd + spar.n_bytes * 8); % tiempo de transmisión (preambulo + start frame delimiter + cantidad de bits)
 k0     = kzeros+khalfp;
 kend   = kzeros+khalfp+kmod;
 % ----------------------------------------

@@ -1,6 +1,12 @@
 import random
 import numpy as np
+import os
+import platform
+if "microsoft" in platform.uname().release.lower() or "WSL" in os.environ:
+    import matplotlib
+    matplotlib.use("TkAgg")  # Puedes probar también con 'Qt5Agg'
 import matplotlib.pyplot as plt
+
 from scipy.fft import fft
 import sys
 sys.path.append('../..')
@@ -22,6 +28,7 @@ fs_MHz = 16.0
 f0_Mhz = 1
 samples = 16
 N_SIGNAL_B = 10
+N_ZEROS = samples - 1
 
 CB_color_cycle = (
     "#377eb8",
@@ -185,8 +192,6 @@ def PlotComplexSignal(signal, reference_signal, title="Signal", reference_label=
     plt.show()
 
 
-
-
 # Parte 1: Generación de señales y simulación del sistema
 
 
@@ -248,7 +253,7 @@ b = GenerateBinarySignal(N_SIGNAL_B, complex=True)
 d = InsertZerosAndAssignValues(b, samples)
 
 # Realizar la convolución para el caso seleccionado
-discard_length = ((len(selected_pulse)) - 1) // 2
+discard_length = ((len(selected_pulse)) - 1) // 2 #hhalfp
 d_sync = np.zeros(discard_length + len(d), dtype=np.complex128)
 d_sync[discard_length:] = d
 x = np.convolve(d, selected_pulse)[:-(discard_length + 1)]
