@@ -274,7 +274,8 @@ PlotComplexSignalDual(xh, d_sync, num_stages=4, reference_label="Deltas", title=
 # PlotComplexSignal(xh, d, reference_label="Deltas", title=f"Señal con pulso \"{pulse_names[selected_pulse_index]}\" en canal \"{channel}\" y defasaje de {delta_phase}", pulse=f"{pulse_names[selected_pulse_index]}", fs_MHz=fs_MHz)
 
 # Agregar ruido al resultado
-c = AddChannelNoise(xh, SNR_dB)
+# c = AddChannelNoise(xh, SNR_dB)
+c = AddPwrNoise(xh, SNR_dB)
 
 
 # Graficar el resultado

@@ -161,20 +161,20 @@ def modulator(byte_seq, spar):
 # Placeholder function for pulse shaping
 def pulse(Ts, Tsymb, type : str):
     fs_MHz = 1/Ts/1000
-    f0_Mhz = 1/Tsymb/1000
-    samples = np.ceil(fs_MHz/f0_Mhz)
+    f0_MHz = 1/Tsymb/1000
+    samples = np.ceil(fs_MHz/f0_MHz)
     print("fs_MHz",fs_MHz)
-    print("f0_Mhz",f0_Mhz)
+    print("f0_MHz",f0_MHz)
     print("samples",samples)
     # fs_MHz = 16.0
-    # f0_Mhz = 1
+    # f0_MHz = 1
     # samples = 16
     pulses = {
-        "sq": SquarePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
-        "sin": SinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
-        "tr": TriangularPulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, samples=samples),
-        "rc": RaisedCosinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, beta=0.5, samples=samples),
-        "rrc": RootRaisedCosinePulse(fs_MHz=fs_MHz, f0_MHz=f0_Mhz, beta=0.5, samples=samples),
+        "sq": SquarePulse(fs_MHz=fs_MHz, f0_MHz=f0_MHz, samples=samples),
+        "sin": SinePulse(fs_MHz=fs_MHz, f0_MHz=f0_MHz, samples=samples),
+        "tr": TriangularPulse(fs_MHz=fs_MHz, f0_MHz=f0_MHz, samples=samples),
+        "rc": RaisedCosinePulse(fs_MHz=fs_MHz, f0_MHz=f0_MHz, beta=0.5, samples=samples),
+        "rrc": RootRaisedCosinePulse(fs_MHz=fs_MHz, f0_MHz=f0_MHz, beta=0.5, samples=samples),
     }
     if type in pulses:
         pulse_shape = pulses[type]
@@ -191,7 +191,27 @@ def pulse(Ts, Tsymb, type : str):
 # System Parameters
 Tsymb = 1e-3  # Symbol Period
 Ts = Tsymb / 16  # Sampling Period
+fs_MHz = int(1/Ts/1000)
+f0_MHz = int(1/Tsymb/1000)
 E_pulse = 1e-6
+selected_channel_type = 1  # 0: Delta, 1: Pasa Bajos
+delta_phase = 0
+samples = int(np.ceil(fs_MHz/f0_MHz))
+PWR_N = 0.1
+
+if selected_channel_type == 0:  # Si se selecciona Delta
+    if not 0 <= delta_phase < 360:
+        delta_phase = float(input("Ingrese la cantidad de grados [0 a 360) para el tipo de canal Delta: "))
+    channel = "Delta"
+    h = DeltaPulse(fs_MHz=fs_MHz, f0_MHz=f0_MHz, samples=samples, phase=delta_phase)
+else:  # Si se selecciona Pasa Bajos
+    channel = "Pasa Bajos"
+    h = LowPassFilterFIR(fs_MHz=fs_MHz, fc_MHz=fs_MHz/20, order=samples)
+
+def channel(x, pwr_n, h):
+    y = np.convolve(x, h)
+    y = AddPwrNoise(y, pwr_n)
+    return y
 
 pulse_shape, n_fir = pulse(Ts, Tsymb, 'rrc')
 
@@ -224,8 +244,23 @@ kend = kzeros + khalfp + kmod
 bytes_seq = np.arange(1, spar['n_bytes'] + 1)
 xaux, mis = modulator(bytes_seq, spar)
 x = np.concatenate((np.zeros(N_ZEROS), xaux))
-d = mis['d']
+d = [np.zeros(N_ZEROS), mis['d']]
 kk = np.arange(k0, kend, Tsymb)
-k = kk
+k = kk.copy()
 
-PlotRealSignal(xaux, d)
+for i in range(1, N_TX):
+    bytes_seq = bytes_seq + 1
+    xaux, mis = modulator(bytes_seq, spar)
+    x = np.concatenate((x, np.zeros(N_ZEROS), xaux))
+    d.extend([np.zeros(N_ZEROS), mis['d']])
+    k = np.concatenate((k, kk + (kend + khalfp) * i))
+
+d = np.concatenate(d) # Unificar d en un solo array si es necesario
+
+# PlotRealSignal(x, d)
+
+c = channel(x, PWR_N, h)
+
+# PlotRealSignal(c, d)
+
+demodulator(c, spar)
