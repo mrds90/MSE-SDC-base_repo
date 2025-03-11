@@ -248,8 +248,25 @@ def pll(input_signal, f0, fs, kp, ki, delay=0):
         "err": err,
         "phi_hat": phi_hat
     }
-    
+
     return vco, pllis
+
+def bits_to_bytes(bit_array):
+    """
+    Convierte un array de bits en un array de bytes.
+    Cada 8 bits se transforman en un número entero.
+    """
+    # Asegurar que la longitud sea múltiplo de 8
+    bit_array = bit_array[:len(bit_array) - (len(bit_array) % 8)]
+
+    # Reshape para agrupar en bloques de 8 bits
+    bit_array = bit_array.reshape(-1, 8)
+
+    # Convertir cada grupo de 8 bits en un byte
+    byte_array = np.packbits(bit_array, axis=1)
+
+    # Aplanar el array si es necesario
+    return byte_array.flatten()
 
 def demodulator(y, spar):
     """
@@ -279,64 +296,58 @@ def demodulator(y, spar):
     y_mf_pf = lfilter(prefilter_b, prefilter_a, y_mf)
     y_mf_pf_sq = y_mf_pf**2
     y_mf_pf_sq_bpf = lfilter(filter_b, filter_a, y_mf_pf_sq)
-    
+
+    # np.savetxt("y_mf_pf_sq_bpf.txt", y_mf_pf_sq_bpf) 
+    # np.savetxt("y_mf_sq_ma.txt", y_mf_sq_ma) 
+    # np.savetxt("y_mf.txt", y_mf) 
+    # y_mf_pf_sq_bpf = np.loadtxt("y_mf_pf_sq_bpf.txt")
+    # y_mf_sq_ma = np.loadtxt("y_mf_sq_ma.txt")
+    # y_mf = np.loadtxt("y_mf.txt")
     # PLL processing
     f0 = 1.0 / spar['Tsymb']
     fs = 1.0 / spar['Ts']
+    print("f0",f0)
+    print("fs",fs)
+
     vco, pllis = pll(y_mf_pf_sq_bpf, f0, fs, spar['pll']['kp'], spar['pll']['ki'], spar['pll']['delay'])
     
     pll_cos, pll_sin = np.real(vco), np.imag(vco)
     pll_clk_i, pll_clk_q = pll_cos >= 0, pll_sin >= 0
-    
-    # Symbol detection
-    detection = y_mf_sq_ma >= spar['det_th']
-    en_sample = np.diff(np.concatenate(([0], pll_clk_i.astype(int)))) & detection
+
+    detection = np.array(y_mf_sq_ma) >= spar['det_th']
+
+    flank_in = pll_clk_i & np.concatenate(([0], ~pll_clk_i[:-1])).astype(bool)
+
+    en_sample = flank_in & detection
+
     hat_xn = np.array(y_mf[en_sample == 1])
     hat_packet = hat_xn > 0
-
     sfd = np.zeros(spar['n_sfd'], dtype=int)
     if spar['n_pre'] % 2 == 0:
         sfd[0::2] = 1
     else:
         sfd[1::2] = 1
-    ###############################################
-    #    QUEDAMOS ACA con señal sincronizada      #
-    ###############################################
-    for i in range(1, np.max(np.cumsum(detection)) + 1):
-        packet = hat_packet[np.cumsum(detection) == i]
-        pattern = np.flip(((1 - 2 * sfd) * -1))
-        conv_result = np.convolve(packet * 2 - 1, pattern, mode='valid')
-        idx_start = np.where(conv_result == len(pattern))[0][0] + len(pattern)
-        idx_stop = np.where(np.cumsum(detection) == i)[0][-1]
-        
-        if idx_stop <= idx_start:
-            continue
-        
-        hat_d_aux = packet[idx_start:idx_stop]
-        hat_data.extend(hat_d_aux)
-        
-        if len(hat_d_aux) % 8 == 0:
-            for j in range(0, len(hat_d_aux), 8):
-                hat_bytes.append(sum(np.flip(2 ** np.arange(8)) * hat_d_aux[j:j + 8]))
-    
-    dis = {
-        "y_mf": y_mf,
-        "y_mf_sq": y_mf_sq,
-        "y_mf_sq_ma": y_mf_sq_ma,
-        "y_mf_pf": y_mf_pf,
-        "y_mf_pf_sq": y_mf_pf_sq,
-        "y_mf_pf_sq_bpf": y_mf_pf_sq_bpf,
-        "detection": detection,
-        "sfd": sfd,
-        "pll_cos": pll_cos,
-        "pll_sin": pll_sin,
-        "pll_clk_i": pll_clk_i,
-        "pll_clk_q": pll_clk_q,
-        "en_sample": en_sample,
-        "hat_xn": hat_xn,
-        "hat_packet": hat_packet,
-        "vco": vco,
-        "pllis": pllis,
-    }
-    
-    return hat_bytes, dis
+    sfd = np.array(sfd)
+    pattern = np.flip(np.concatenate([~sfd, sfd]) * 2 - 1)
+    conv_result = np.convolve(hat_packet * 2 - 1, pattern, mode='valid')
+    plt.plot(conv_result, label='conv_result')
+    plt.plot(hat_packet, label='hat_packet')
+    plt.legend()
+    plt.show()
+
+    hat_bytes = []
+    i = 0
+    while i < len(conv_result):
+        if conv_result[i] > -3:
+            i+=1
+        else:
+            while (hat_packet[i] != 0) and (conv_result[i] < 0):
+                i+=1
+            i+=1
+            packet = hat_packet[i:i + 8 * spar['n_bytes']]
+            hat_bytes.extend(np.packbits(packet,bitorder='big'))
+            i+=8*spar['n_bytes']
+
+    print("hat_bytes",hat_bytes)
+    return hat_bytes, pllis
+            
