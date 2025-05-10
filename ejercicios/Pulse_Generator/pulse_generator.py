@@ -3,6 +3,7 @@ from scipy.signal import firwin
 from scipy.signal import lfilter
 import matplotlib.pyplot as plt
 
+
 def GenerateBinarySignal(length: int, complex: bool = False) -> np.ndarray:
     """
     Generates a random binary signal of specified length.
@@ -51,7 +52,7 @@ def InsertZerosAndAssignValues(binary_signal: np.ndarray, M: int) -> np.ndarray:
         modified_signal = np.zeros(modified_length, dtype=complex)
     else:
         modified_signal = np.zeros(modified_length, dtype=float)  # Initialize a signal of zeros with the modified length
-    
+
     # Create an array to represent indices of each bit in the modified signal
     bit_indices = np.arange(length) * M
 
@@ -63,7 +64,7 @@ def InsertZerosAndAssignValues(binary_signal: np.ndarray, M: int) -> np.ndarray:
 def AddPwrNoise(x, pwr):
     sigma = np.sqrt(pwr)
     y = x + sigma * np.random.randn(len(x))
-    
+
     return y
 
 def AddChannelNoise(signal: np.ndarray, SNR_dB: float) -> np.ndarray:
@@ -106,23 +107,23 @@ def TimeVector(fs_MHz: float, samples: int) -> np.ndarray:
     return t_us
 
 def DeltaPulse(fs_MHz: float, f0_MHz: float, samples: int, phase: float) -> np.ndarray:
-    
+
     if phase < 0 or phase >= 360:
         raise ValueError("El argumento 'phase' debe estar en el rango de 0 a 360 grados.")
-    
+
     # Calcula el período de la señal de entrada
     T = 1 / f0_MHz
     samples_by_cycle = T * fs_MHz
-        
+
     # Determina el índice más cercano para el desfase de fase
     phase_shift_index = int(round(phase / 360 * samples_by_cycle))
-    
+
     # Inicializa el vector de salida con ceros
     delta_pulse = np.zeros(samples)
-    
+
     # Establece el valor del delta en el índice correspondiente
     delta_pulse[phase_shift_index] = 1
-    
+
     return delta_pulse
 
 
@@ -130,11 +131,11 @@ def SquarePulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = Fals
     t_us = TimeVector(fs_MHz, samples)
     signal = np.sign(np.sin(2 * np.pi * (f0_MHz/2) * t_us))
     signal[signal < 0] = 0
-    
+
     if(complex == True):
         env_complex = np.exp(1j * 2 * np.pi * (f0_MHz/2) * t_us)
         signal = signal * env_complex
-    
+
     return signal
 
     return signal
@@ -147,18 +148,18 @@ def TriangularPulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = 
     if(complex == True):
         env_complex = np.exp(1j * 2 * np.pi * f0_MHz * t_us)
         signal = signal * env_complex
-    
+
     return signal
 
 
 def SinePulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = False) -> np.ndarray:
-    
+
     t_us = TimeVector(fs_MHz, samples)
     signal = np.sin(2 * np.pi * (f0_MHz/2) * t_us)
-    
+
     if(complex == True):
         signal = signal * (np.sin(2 * np.pi * (f0_MHz / 2) * t_us))
-        
+
     return signal
 
 
@@ -166,7 +167,7 @@ def RaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int, co
 
     t = np.arange(-3 * samples + 1,  3 * samples + 1) / fs_MHz
     T0=1/f0_MHz
-    
+
     signal = np.zeros_like(t)
     beta_term = np.pi * beta * t / T0
     mask = np.abs(1 - (2 * beta * t / T0) ** 2) != 0
@@ -174,7 +175,7 @@ def RaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int, co
     signal[mask] = (1 / T0) * np.sinc(t[mask] / T0) * np.cos(beta_term[mask]) / (1 - (2 * beta * t[mask] / T0) ** 2)
     signal[t==T0/2/beta] = np.pi/4/T0*np.sinc(1/2/beta)
     signal[t==-T0/2/beta] = np.pi/4/T0*np.sinc(1/2/beta)
-    
+
     if(complex == True):
         env_complex = np.exp(1j * 2 * np.pi * f0_MHz * t)
         signal = signal * env_complex
@@ -193,11 +194,11 @@ def RootRaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int
     signal [t==0] = 1/T0*(1+beta*(4/np.pi-1))
     signal [t==T0/4/beta] = beta/T0/np.sqrt(2)*((1+2/np.pi)*np.sin(np.pi/4/beta)+(1-2/np.pi)*np.cos(np.pi/4/beta))
     signal [t==-T0/4/beta] = beta/T0/np.sqrt(2)*((1+2/np.pi)*np.sin(np.pi/4/beta)+(1-2/np.pi)*np.cos(np.pi/4/beta))
-    
+
     if(complex == True):
         env_complex = np.exp(1j * 2 * np.pi * f0_MHz * t)
         signal = signal * env_complex
-    
+
     return signal
 
 
@@ -235,14 +236,14 @@ def pll(input_signal, f0, fs, kp, ki, delay=0):
     phd = np.zeros(len(input_signal) + delay)
     vco = np.zeros(len(input_signal) + delay, dtype=complex)
     int_err = np.zeros(len(input_signal) + delay)
-    
+
     for it in range(1 + delay, len(input_signal)):
         vco[it] = np.exp(-1j * (2 * np.pi * it * f0 / fs + phi_hat[it - 1 - delay]))
         phd[it] = np.imag(input_signal[it] * vco[it])
         int_err[it] = ki * phd[it] + int_err[it - 1]
         err[it] = kp * phd[it] + int_err[it]
         phi_hat[it] = phi_hat[it - 1] + err[it]
-    
+
     pllis = {
         "phd": phd,
         "err": err,
@@ -276,41 +277,40 @@ def demodulator(y, spar):
     :return: Demodulated bytes and internal signals
     """
     n_bytes = spar['n_bytes']
-    
+
     # Matched filter
     y_mf = lfilter(spar['pulse'], [1], y)
     y_mf /= np.sum(spar['pulse']**2)
-    
+
     # Square and moving average filter
     y_mf_sq = y_mf**2
     n_ma = spar['n_pulse']
     y_mf_sq_ma = lfilter(np.ones(int(n_ma)) / n_ma, [1], y_mf_sq)
-     
+
     # Read pre-filter and bandpass filter coefficients
     prefilter_data = [[0.01925927815873231,0,-0.01925927815873231],[1,-1.924163036247956,0.9614814515953285]]
     prefilter_b, prefilter_a = prefilter_data[0], prefilter_data[1]
     filter_data = [[0.004884799809161248,0,-0.004884799809161248],[1,-1.838755285386028,0.9902304008963749]]
 
     filter_b, filter_a = filter_data[0], filter_data[1]
-    
+
     y_mf_pf = lfilter(prefilter_b, prefilter_a, y_mf)
     y_mf_pf_sq = y_mf_pf**2
     y_mf_pf_sq_bpf = lfilter(filter_b, filter_a, y_mf_pf_sq)
 
-    # np.savetxt("y_mf_pf_sq_bpf.txt", y_mf_pf_sq_bpf) 
-    # np.savetxt("y_mf_sq_ma.txt", y_mf_sq_ma) 
-    # np.savetxt("y_mf.txt", y_mf) 
+    # np.savetxt("y_mf_pf_sq_bpf.txt", y_mf_pf_sq_bpf)
+    # np.savetxt("y_mf_sq_ma.txt", y_mf_sq_ma)
+    # np.savetxt("y_mf.txt", y_mf)
     # y_mf_pf_sq_bpf = np.loadtxt("y_mf_pf_sq_bpf.txt")
     # y_mf_sq_ma = np.loadtxt("y_mf_sq_ma.txt")
     # y_mf = np.loadtxt("y_mf.txt")
     # PLL processing
+
     f0 = 1.0 / spar['Tsymb']
     fs = 1.0 / spar['Ts']
-    print("f0",f0)
-    print("fs",fs)
 
     vco, pllis = pll(y_mf_pf_sq_bpf, f0, fs, spar['pll']['kp'], spar['pll']['ki'], spar['pll']['delay'])
-    
+
     pll_cos, pll_sin = np.real(vco), np.imag(vco)
     pll_clk_i, pll_clk_q = pll_cos >= 0, pll_sin >= 0
 
@@ -330,24 +330,35 @@ def demodulator(y, spar):
     sfd = np.array(sfd)
     pattern = np.flip(np.concatenate([~sfd, sfd]) * 2 - 1)
     conv_result = np.convolve(hat_packet * 2 - 1, pattern, mode='valid')
-    plt.plot(conv_result, label='conv_result')
-    plt.plot(hat_packet, label='hat_packet')
-    plt.legend()
-    plt.show()
 
     hat_bytes = []
     i = 0
     while i < len(conv_result):
-        if conv_result[i] > -3:
-            i+=1
-        else:
-            while (hat_packet[i] != 0) and (conv_result[i] < 0):
-                i+=1
-            i+=1
-            packet = hat_packet[i:i + 8 * spar['n_bytes']]
-            hat_bytes.extend(np.packbits(packet,bitorder='big'))
-            i+=8*spar['n_bytes']
+        if conv_result[i] <= -3:
+            while (i < len(conv_result)) and (hat_packet[i] != 0) and (conv_result[i] < 0):
+                i += 1
 
-    print("hat_bytes",hat_bytes)
-    return hat_bytes, pllis
-            
+            if i >= len(conv_result):
+                break
+
+            i += 1
+
+            packet = hat_packet[i : i + 8 * spar['n_bytes']]
+            hat_bytes.extend(np.packbits(packet, bitorder='big'))
+
+            i += 8 * spar['n_bytes']
+
+        else:
+            i += 1
+
+    dis = {
+        'y_mf': y_mf,
+        'y_mf_pf': y_mf_pf,
+        'y_mf_pf_sq': y_mf_pf_sq,
+        'y_mf_pf_sq_bpf': y_mf_pf_sq_bpf,
+        'y_mf_sq_ma': y_mf_sq_ma,
+        'vco': vco,
+        'pll': pllis,
+        'hat_packet': hat_packet,
+    }
+    return hat_bytes, dis
