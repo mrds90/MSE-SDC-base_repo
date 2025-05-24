@@ -67,6 +67,17 @@ def AddPwrNoise(x, pwr):
 
     return y
 
+def AddAWGN(signal, snr_dB):
+    """Agrega ruido blanco gaussiano aditivo (AWGN) a una señal con una SNR en dB."""
+    signal_power = np.mean(np.abs(signal)**2)
+    snr_linear = 10**(snr_dB / 10)
+    noise_power = signal_power / snr_linear
+    noise_std = np.sqrt(noise_power)
+    noise = noise_std * np.random.randn(len(signal))
+    return signal + noise
+
+
+    return y
 def AddChannelNoise(signal: np.ndarray, SNR_dB: float) -> np.ndarray:
     """
     Adds additive white Gaussian noise (AWGN) to the signal.

@@ -11,7 +11,9 @@ from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
 from Pulse_Generator import *
-
+from mpl_toolkits.mplot3d import Axes3D
+import seaborn as sns
+import math
 
 CB_color_cycle = (
     "#377eb8",
@@ -260,85 +262,128 @@ E_pulse = 1e-6
 selected_channel_type = 1  # 0: Delta, 1: Pasa Bajos
 delta_phase = 0
 samples = int(np.ceil(fs_MHz/f0_MHz))
-PWR_N = 0.01
+# PWR_N = 0.01
+pll_kp_array = np.arange(0 , 5, 0.05)
+pll_ki_array = np.arange(0 , 0.15, 0.01)
+# Parámetros
+ITERATIONS = 10  # Para promediar errores
+snr_dB_array = [80, 40, 20, 10, 5, 0]
+error_avg = np.zeros((len(pll_ki_array), len(snr_dB_array), len(pll_kp_array)))
 
-if selected_channel_type == 0:  # Si se selecciona Delta
-    if not 0 <= delta_phase < 360:
-        delta_phase = float(input("Ingrese la cantidad de grados [0 a 360) para el tipo de canal Delta: "))
-    channel = "Delta"
-    h = DeltaPulse(fs_MHz=fs_MHz, f0_MHz=f0_MHz, samples=samples, phase=delta_phase)
-else:  # Si se selecciona Pasa Bajos
-    channel = "Pasa Bajos"
-    h = LowPassFilterFIR(fs_MHz=fs_MHz, fc_MHz=fs_MHz/20, order=samples)
+for j in range(ITERATIONS):
+    print(f"Iteración {j+1}")
+    for noise_index, power_noise in enumerate(snr_dB_array):
+        for ki_index, pll_ki in enumerate(pll_ki_array):
+            for kp_index, pll_kp in enumerate(pll_kp_array):
 
-def channel(x, pwr_n, h):
-    y = np.convolve(x, h)
-    y = AddPwrNoise(y, pwr_n)
-    return y
+                # Canal
+                if selected_channel_type == 0:
+                    h = DeltaPulse(fs_MHz=fs_MHz, f0_MHz=f0_MHz, samples=samples, phase=delta_phase)
+                else:
+                    h = LowPassFilterFIR(fs_MHz=fs_MHz, fc_MHz=fs_MHz/20, order=samples)
 
-pulse_shape, n_fir = pulse(Ts, Tsymb, 'rrc')
+                def channel(x, pwr_n, h):
+                    y = np.convolve(x, h)
+                    y = AddAWGN(y, pwr_n)
+                    return y
 
-spar = {
-    'Tsymb': Tsymb,
-    'Ts': Ts,
-    'n_bytes': 4,
-    'n_pre': 16,
-    'n_sfd': 2,
-    'pulse': pulse_shape,
-    'n_pulse': int(Tsymb / Ts),
-    'E_pulse': E_pulse,
-    'n_fir': n_fir,
-    'det_th': 0.25,
-    'pll': {'kp': 0.7, 'ki': 0.01, 'delay': 0}
-}
+                pulse_shape, n_fir = pulse(Ts, Tsymb, 'rrc')
+                spar = {
+                    'Tsymb': Tsymb,
+                    'Ts': Ts,
+                    'n_bytes': 4,
+                    'n_pre': 16,
+                    'n_sfd': 2,
+                    'pulse': pulse_shape,
+                    'n_pulse': int(Tsymb / Ts),
+                    'E_pulse': E_pulse,
+                    'n_fir': n_fir,
+                    'det_th': 0.25,
+                    'pll': {'kp': pll_kp, 'ki': pll_ki, 'delay': 0}
+                }
 
-# Simulation Parameters
-N_TX = 3
-N_ZEROS = 123
+                # Modulación
+                N_TX = 10
+                N_ZEROS = 123
+                kzeros = Ts * N_ZEROS
+                khalfp = Ts * (n_fir - 1) / 2
+                kmod = Tsymb * (spar['n_pre'] + spar['n_sfd'] + spar['n_bytes'] * 8)
+                k0 = kzeros + khalfp
+                kend = kzeros + khalfp + kmod
+                data_sent, x, d, k, bits_sent = [], np.array([]), [], np.array([]), []
+                kk = np.arange(k0, kend, Tsymb)
 
-# Discrete Time
-kzeros = Ts * N_ZEROS
-khalfp = Ts * (n_fir - 1) / 2
-kmod = Tsymb * (spar['n_pre'] + spar['n_sfd'] + spar['n_bytes'] * 8)
-k0 = kzeros + khalfp
-kend = kzeros + khalfp + kmod
-data_sent = []
-# Modulator
-x = np.array([])
-k = np.array([])
-d = []
-bits_sent = []
-kk = np.arange(k0, kend, Tsymb)
-for i in range(0, N_TX):
-    bytes_seq = np.arange(1 + i, spar['n_bytes'] + 1 + i)
-    data_sent.extend(bytes_seq)
-    xaux, mis = modulator(bytes_seq, spar)
-    x = np.concatenate((x, np.zeros(N_ZEROS), xaux))
-    d.extend([np.zeros(N_ZEROS), mis['d']])
-    bits_sent.extend(mis["bits"])
-    k = np.concatenate((k, kk + (kend + khalfp) * i))
+                for i in range(N_TX):
+                    bytes_seq = np.arange(1 + i, spar['n_bytes'] + 1 + i)
+                    data_sent.extend(bytes_seq)
+                    xaux, mis = modulator(bytes_seq, spar)
+                    x = np.concatenate((x, np.zeros(N_ZEROS), xaux))
+                    d.extend([np.zeros(N_ZEROS), mis['d']])
+                    bits_sent.extend(mis["bits"])
+                    k = np.concatenate((k, kk + (kend + khalfp) * i))
 
-d = np.concatenate(d) # Unificar d en un solo array si es necesario
+                d = np.concatenate(d)
+                # PlotRealSignalDual(x, d, num_stages=3)
+                # Canal y demodulación
+                c = channel(x, power_noise, h)
+                # PlotRealSignalDual(c, d,num_stages=3)
+                hat_bytes, dis = demodulator(c, spar)
+                len_diff = abs(len(data_sent) - len(hat_bytes))
 
-PlotRealSignalDual(x, d, num_stages=3)
+                if len(hat_bytes) > len(data_sent):
+                    errores = np.count_nonzero(np.array(hat_bytes[:len(data_sent)]) != np.array(data_sent))
+                else:
+                    errores = np.count_nonzero(np.array(hat_bytes) != np.array(data_sent[:len(hat_bytes)]))
+                error_pct = (errores + len_diff) / len(data_sent) * 100
+                # print(f"Elementos distintos: {errores}")
+                # print(f"Porcentaje de error: {error_pct}%")
+                # PlotRealSignalDual(dis['y_mf'], d, num_stages=3)
+                error_avg[ki_index, noise_index, kp_index] += error_pct
 
-c = channel(x, PWR_N, h)
+# Promediar sobre iteraciones
+error_avg /= ITERATIONS
 
-PlotRealSignalDual(c, d,num_stages=3)
+error_global = np.mean(error_avg, axis=1)  # Promedia sobre el eje del ruido: (KI, KP)
+min_idx = np.unravel_index(np.argmin(error_global), error_global.shape)
+best_ki = pll_ki_array[min_idx[0]]
+best_kp = pll_kp_array[min_idx[1]]
 
-hat_bytes, dis = demodulator(c, spar)
-
-bit_received = np.unpackbits(hat_bytes)
+print(f"Mejor combinación global: KP = {best_kp:.2f}, KI = {best_ki:.3f}")
 
 
-elementos_perdidos = abs(len(data_sent) - len(hat_bytes))
-print(f"Elementos perdidos: {elementos_perdidos}")
-if(len(hat_bytes) > len(data_sent)):
-    elementos_distintos = np.count_nonzero(np.array(hat_bytes[:len(data_sent)]) != np.array(data_sent))
-else:
-    elementos_distintos = np.count_nonzero(np.array(hat_bytes) != np.array(data_sent[:len(hat_bytes)]))
-print(f"Elementos distintos: {elementos_distintos}")
-print(f"Porcentaje de error: {(elementos_distintos + elementos_perdidos)/len(data_sent)*100}%")
-PlotRealSignalDual(dis['y_mf'], d, num_stages=3)
-PlotRealSignal(hat_bytes, data_sent[:len(hat_bytes)], title="Bytes", reference_label="Sent Bytes", pulse="Byte", fs_MHz=16.0, CB_color_cycle=CB_color_cycle)
-PlotRealSignal(bits_sent, bit_received, title="bits", reference_label="Bits sent", pulse="Bit", fs_MHz=16.0, CB_color_cycle=CB_color_cycle)
+error_total = np.transpose(error_avg, (1, 0, 2))  # shape: [noise_index, ki_index, kp_index]
+
+
+X_kp, Y_ki = np.meshgrid(pll_kp_array, pll_ki_array)
+
+
+num_plots = len(snr_dB_array)
+cols = math.ceil(np.sqrt(num_plots))          # Cantidad de columnas
+rows = math.ceil(num_plots / cols)            # Cantidad de filas
+
+fig, axes = plt.subplots(rows, cols, figsize=(4*cols, 3.5*rows), squeeze=False)
+
+for idx, snr_dB in enumerate(snr_dB_array):
+    row = idx // cols
+    col = idx % cols
+    ax = axes[row, col]
+    
+    Z_error = error_avg[:, idx, :]  # Shape: (len(ki), len(kp))
+
+    heatmap = ax.pcolormesh(X_kp, Y_ki, Z_error, shading='auto', cmap='viridis')
+    ax.set_title(f'RSN = {snr_dB:.1f} dB')
+    ax.set_xlabel('PLL KP')
+    ax.set_ylabel('PLL KI')
+
+    # Agregá colorbar por subplot si querés
+    fig.colorbar(heatmap, ax=ax)
+
+# Si hay subplots vacíos, ocultalos
+for i in range(num_plots, rows * cols):
+    fig.delaxes(axes[i // cols, i % cols])
+
+plt.suptitle('Error (%) para distintas RSN', fontsize=16)
+fig.text(0.5, 0.93, f"Mejor combinación global: KP = {best_kp:.2f}, KI = {best_ki:.3f}",
+         ha='center', fontsize=12, color='black')
+plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.show()
