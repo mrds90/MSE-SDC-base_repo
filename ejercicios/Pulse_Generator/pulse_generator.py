@@ -1,21 +1,24 @@
+## @file pulse_generator.py
+# @brief This module contains functions for generating and processing various types of pulses.
+# @details The functions include generating binary signals, inserting zeros, adding noise, and creating different pulse shapes.
+# @details The module also includes functions for filtering, phase-locked loop (PLL) implementation, and demodulation.
+# @details The functions are designed to work with both real and complex signals.
+# @author Marcos Dominguez
+# @author Lucas Monzon Languasco
+
+# =============================================================================================================================
 import numpy as np
 from scipy.signal import firwin
 from scipy.signal import lfilter
 import matplotlib.pyplot as plt
 
-
+## Function for generating a random binary signal of specified length
+# @param length Length of the binary signal
+# @param complex Indicates whether the signal should have a complex part. Default is False.
+# @return Random binary signal of specified length
+# @details The function generates a sequence of random binary values (0 or 1) and maps them to {-1, 1}.
+# @details If the complex parameter is set to True, it generates a complex signal with both real and imaginary parts.
 def GenerateBinarySignal(length: int, complex: bool = False) -> np.ndarray:
-    """
-    Generates a random binary signal of specified length.
-
-    Parameters:
-        length (int): Length of the binary signal.
-        complex (bool): Indicates whether the signal should have a complex part. Default is False.
-
-    Returns:
-        numpy.ndarray: Random binary signal of specified length.
-    """
-
     # Generate a sequence of random binary values (0 or 1)
     binary_sequence_real = np.random.randint(2, size=length)
 
@@ -34,18 +37,12 @@ def GenerateBinarySignal(length: int, complex: bool = False) -> np.ndarray:
 
     return binary_signal
 
-
+## Function to insert zeros between bits of a binary signal and assign values to each bit
+# @param binary_signal Input binary signal
+# @param M Number of zeros to insert between each bit
+# @return Modified signal with inserted zeros and assigned values
+# @details The function takes a binary signal and inserts M-1 zeros between each bit.
 def InsertZerosAndAssignValues(binary_signal: np.ndarray, M: int) -> np.ndarray:
-    """
-    Inserts M-1 zeros between each bit of the binary signal and assigns values to each bit.
-
-    Parameters:
-        binary_signal (numpy.ndarray): Binary signal.
-        M (int): Number of zeros to insert between each bit.
-
-    Returns:
-        numpy.ndarray: Modified signal with inserted zeros and assigned values.
-    """
     length = len(binary_signal)
     modified_length = length * M
     if np.iscomplexobj(binary_signal):
@@ -61,14 +58,23 @@ def InsertZerosAndAssignValues(binary_signal: np.ndarray, M: int) -> np.ndarray:
 
     return modified_signal
 
+## Function to add power noise to a signal
+# @param x Input signal
+# @param pwr Power of the noise to be added
+# @return Signal with added power noise
+# @details Better not to use this function.
 def AddPwrNoise(x, pwr):
     sigma = np.sqrt(pwr)
     y = x + sigma * np.random.randn(len(x))
 
     return y
 
+## Function to add Gaussian noise to a signal based on a specified Signal-to-Noise Ratio (SNR)
+# @param signal Input signal
+# @param snr_dB Signal-to-Noise Ratio in dB
+# @return Signal with added Gaussian noise
+# @details The function calculates the power of the input signal and generates Gaussian noise with the specified SNR.
 def AddAWGN(signal, snr_dB):
-    """Agrega ruido blanco gaussiano aditivo (AWGN) a una señal con una SNR en dB."""
     signal_power = np.mean(np.abs(signal)**2)
     snr_linear = 10**(snr_dB / 10)
     noise_power = signal_power / snr_linear
@@ -77,34 +83,28 @@ def AddAWGN(signal, snr_dB):
     return signal + noise
 
 
-    return y
+## Function to add additive white Gaussian noise (AWGN) to a signal
+# @param signal Input signal
+# @param SNR_dB Signal-to-noise ratio in dB
+# @return Signal with added noise
+# @details The function calculates the power of the input signal and generates Gaussian noise with the specified SNR.
 def AddChannelNoise(signal: np.ndarray, SNR_dB: float) -> np.ndarray:
-    """
-    Adds additive white Gaussian noise (AWGN) to the signal.
-
-    Parameters:
-        signal (numpy.ndarray): Input signal.
-        SNR_dB (float): Signal-to-noise ratio in dB.
-
-    Returns:
-        numpy.ndarray: Signal with added noise.
-    """
     if np.iscomplexobj(signal):
-        # Calcular la potencia de la señal
+        # Calculate the power of the signal
         signal_power = np.sum(np.abs(signal)**2) / len(signal)
 
-        # Calcular la potencia del ruido según la relación señal-ruido (SNR)
+        # Calculate the noise power based on the SNR
         noise_power = signal_power / (10 ** (SNR_dB / 10))
 
-        # Generar ruido gaussiano con la misma longitud que la señal
+        # Generate gaussian noise for real and imaginary parts with the same length as the signal
         noise_real = np.random.normal(0, np.sqrt(noise_power / 2), len(signal))
         noise_imag = np.random.normal(0, np.sqrt(noise_power / 2), len(signal))
         noise = noise_real + 1j * noise_imag
 
-        # Sumar el ruido a la señal
+        # Add the noise to the signal
         noisy_signal = signal + noise
     else:
-        # Si la señal es real, agregar solo ruido gaussiano
+        # If the signal is real, only add the gaussian noise
         noise_power = 10 ** (SNR_dB / 10)
         noise = np.random.normal(0, np.sqrt(noise_power), len(signal))
         noisy_signal = signal + noise
@@ -112,32 +112,51 @@ def AddChannelNoise(signal: np.ndarray, SNR_dB: float) -> np.ndarray:
     return noisy_signal
 
 
-
+## Function to generate a time vector based on the sampling frequency and number of samples
+# @param fs_MHz Sampling frequency in MHz
+# @param samples Number of samples
+# @return Time vector in microseconds
+# @details The function generates a time vector ranging from 1 to the number of samples, 
+# divided by the sampling frequency.
 def TimeVector(fs_MHz: float, samples: int) -> np.ndarray:
     t_us = np.arange(1, samples + 1) / fs_MHz
     return t_us
 
-def DeltaPulse(fs_MHz: float, f0_MHz: float, samples: int, phase: float) -> np.ndarray:
 
+## Function to create a delta pulse with a specified phase shift
+# @param fs_MHz Sampling frequency in MHz
+# @param f0_MHz Frequency of the delta pulse in MHz
+# @param samples Number of samples in the delta pulse
+# @param phase Phase shift in degrees
+# @return Delta pulse with the specified phase shift
+# @details The phase shift is calculated based on the frequency and sampling frequency.
+# @deatils Raises ValueError if the phase is not in the range of 0 to 360 degrees.
+def DeltaPulse(fs_MHz: float, f0_MHz: float, samples: int, phase: float) -> np.ndarray:
     if phase < 0 or phase >= 360:
         raise ValueError("El argumento 'phase' debe estar en el rango de 0 a 360 grados.")
 
-    # Calcula el período de la señal de entrada
+    # Calculate the period of the signal
     T = 1 / f0_MHz
     samples_by_cycle = T * fs_MHz
 
-    # Determina el índice más cercano para el desfase de fase
+    # Determine the index of the delta pulse based on the phase shift
     phase_shift_index = int(round(phase / 360 * samples_by_cycle))
 
-    # Inicializa el vector de salida con ceros
+    # Init the delta array with zeros
     delta_pulse = np.zeros(samples)
 
-    # Establece el valor del delta en el índice correspondiente
+    # Stablish the delta pulse at the calculated index
     delta_pulse[phase_shift_index] = 1
 
     return delta_pulse
 
 
+## Function to generate a square pulse signal
+# @param fs_MHz Sampling frequency in MHz
+# @param f0_MHz Frequency of the square pulse in MHz
+# @param samples Number of samples in the square pulse
+# @param complex Boolean that indicates whether the signal should have a complex part. Default is False.
+# @return Square pulse signal
 def SquarePulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = False) -> np.ndarray:
     t_us = TimeVector(fs_MHz, samples)
     signal = np.sign(np.sin(2 * np.pi * (f0_MHz/2) * t_us))
@@ -149,9 +168,13 @@ def SquarePulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = Fals
 
     return signal
 
-    return signal
 
-
+## Function to generate a triangular pulse signal
+# @param fs_MHz Sampling frequency in MHz
+# @param f0_MHz Frequency of the triangular pulse in MHz
+# @param samples Number of samples in the triangular pulse
+# @param complex Boolean that indicates whether the signal should have a complex part. Default is False.
+# @return Triangular pulse signal
 def TriangularPulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = False) -> np.ndarray:
     t_us = TimeVector(fs_MHz, samples)
     signal = (2 / np.pi) * np.arcsin(np.sin(2 * np.pi * (f0_MHz/2) * t_us))
@@ -162,9 +185,13 @@ def TriangularPulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = 
 
     return signal
 
-
+## Function to generate a sine pulse signal
+# @param fs_MHz Sampling frequency in MHz
+# @param f0_MHz Frequency of the sine pulse in MHz
+# @param samples Number of samples in the sine pulse
+# @param complex Boolean that indicates whether the signal should have a complex part. Default is False.
+# @return Sine pulse signal
 def SinePulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = False) -> np.ndarray:
-
     t_us = TimeVector(fs_MHz, samples)
     signal = np.sin(2 * np.pi * (f0_MHz/2) * t_us)
 
@@ -173,9 +200,13 @@ def SinePulse(fs_MHz: float, f0_MHz: float, samples: int, complex: bool = False)
 
     return signal
 
-
+## Function to generate a raised cosine pulse signal
+# @param fs_MHz Sampling frequency in MHz
+# @param f0_MHz Frequency of the raised cosine pulse in MHz
+# @param samples Number of samples in the raised cosine pulse
+# @param complex Boolean that indicates whether the signal should have a complex part. Default is False.
+# @return Raised cosine pulse signal
 def RaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int, complex: bool = False) -> np.ndarray:
-
     t = np.arange(-3 * samples + 1,  3 * samples + 1) / fs_MHz
     T0=1/f0_MHz
 
@@ -193,7 +224,13 @@ def RaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int, co
 
     return signal
 
-
+## Function to generate a root raised cosine pulse signal
+# @param fs_MHz Sampling frequency in MHz
+# @param f0_MHz Frequency of the root raised cosine pulse in MHz
+# @param beta Roll-off factor for the root raised cosine pulse
+# @param samples Number of samples in the root raised cosine pulse
+# @param complex Boolean that indicates whether the signal should have a complex part. Default is False.
+# @return Root raised cosine pulse signal
 def RootRaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int, complex: bool = False) -> np.ndarray:
     t = np.arange(-3 * samples + 1,  3 * samples + 1) / fs_MHz
     T0=1/f0_MHz
@@ -213,35 +250,29 @@ def RootRaisedCosinePulse(fs_MHz: float, f0_MHz:float, beta: float, samples: int
     return signal
 
 
+## Function to design a low-pass FIR filter using the window method
+# @param fs_MHz Sampling frequency in MHz
+# @param fc_MHz Cut-off frequency of the low-pass filter in MHz
+# @param order Order of the FIR filter
+# @return Coefficients of the FIR filter
+# @details The function uses the `firwin` function from the `scipy.signal` module to design the filter.
 def LowPassFilterFIR(fs_MHz: float, fc_MHz: float, order: int) -> np.ndarray:
-    """
-    Design a low-pass FIR filter.
-
-    Parameters:
-        fs_MHz (float): Sampling frequency in MHz.
-        fc_MHz (float): Cut-off frequency of the low-pass filter in MHz.
-        order (int): Order of the FIR filter.
-
-    Returns:
-        np.ndarray: Coefficients of the FIR filter.
-    """
     nyquist_frequency = 0.5 * fs_MHz
     normalized_cutoff_frequency = fc_MHz / nyquist_frequency
     fir_coefficients = firwin(order, normalized_cutoff_frequency)
     return fir_coefficients
 
 
+## Funtion to implement a phase-locked loop (PLL)
+# @param input_signal Input signal array
+# @param f0 Center frequency of the VCO
+# @param fs Sampling frequency
+# @param kp Proportional constant
+# @param ki Integrator constant
+# @param delay Optional delay parameter
+# @return VCO output and PLL internal signals
+# @details The function implements a PLL using a VCO and a phase detector.
 def pll(input_signal, f0, fs, kp, ki, delay=0):
-    """
-    Phase-Locked Loop (PLL) implementation.
-    :param input_signal: Input signal array
-    :param f0: VCO center frequency
-    :param fs: Sampling frequency
-    :param kp: Proportional constant
-    :param ki: Integrator constant
-    :param delay: Optional delay parameter
-    :return: VCO output and PLL internal signals
-    """
     phi_hat = np.zeros(len(input_signal) + delay)
     err = np.zeros(len(input_signal) + delay)
     phd = np.zeros(len(input_signal) + delay)
@@ -263,30 +294,30 @@ def pll(input_signal, f0, fs, kp, ki, delay=0):
 
     return vco, pllis
 
+## Function to convert a bit array to a byte array
+# @param bit_array Input array of bits
+# @return Array of bytes
+# @details The function reshapes the bit array into groups of 8 bits and converts each group into a byte.
 def bits_to_bytes(bit_array):
-    """
-    Convierte un array de bits en un array de bytes.
-    Cada 8 bits se transforman en un número entero.
-    """
-    # Asegurar que la longitud sea múltiplo de 8
+    # Make sure the length of the bit array is a multiple of 8
     bit_array = bit_array[:len(bit_array) - (len(bit_array) % 8)]
 
-    # Reshape para agrupar en bloques de 8 bits
+    # Reshape the bit array into groups of 8 bits
     bit_array = bit_array.reshape(-1, 8)
 
-    # Convertir cada grupo de 8 bits en un byte
+    # Convert each group of 8 bits into a byte
     byte_array = np.packbits(bit_array, axis=1)
 
-    # Aplanar el array si es necesario
+    # Flatten the byte array to a 1D array
     return byte_array.flatten()
 
+## Function to demodulate a signal using a phase-locked loop (PLL)
+# @param y Input signal array
+# @param spar Dictionary containing system parameters
+# @return Demodulated bytes and internal signals
+# @details The function applies a matched filter, square and moving average filter, 
+# and PLL processing to demodulate the signal.
 def demodulator(y, spar):
-    """
-    Demodulator function using PLL.
-    :param y: Input signal array
-    :param spar: Dictionary containing system parameters
-    :return: Demodulated bytes and internal signals
-    """
     n_bytes = spar['n_bytes']
 
     # Matched filter
