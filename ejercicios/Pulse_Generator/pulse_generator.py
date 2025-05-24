@@ -402,5 +402,6 @@ def demodulator(y, spar):
         'vco': vco,
         'pll': pllis,
         'hat_packet': hat_packet,
+        'en_sample': en_sample,
     }
     return hat_bytes, dis
