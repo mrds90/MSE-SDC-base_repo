@@ -1,3 +1,12 @@
+## @file tp_final.py
+# @brief Comunication System Simulation with modulation and demodulation
+# @details This script simulates a communication system with modulation and demodulation. 
+# It includes the generation of a packet, modulation, transmission through a channel, and demodulation. 
+# The script also allows for the visualization of the signals at different stages of the process.
+# @author Marcos Dominguez
+# @author Lucas Monzon Languasco
+
+# =============================================================================================================================
 import numpy as np
 from scipy.signal import convolve
 import os
@@ -15,6 +24,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import seaborn as sns
 import math
 
+
+## Color variable cycle to be used in the plots.
 CB_color_cycle = (
     "#377eb8",
     "#ff7f00",
@@ -27,6 +38,16 @@ CB_color_cycle = (
     "#dede00",
 )
 
+
+## Function to plot the real part of a signal its reference signal.
+# @param signal The signal to be plotted.
+# @param reference_signal The reference signal to be plotted.
+# @param title The title of the plot.
+# @param reference_label The label for the reference signal.
+# @param pulse The label for the pulse signal.
+# @param fs_MHz The sampling frequency in MHz.
+# @param CB_color_cycle The color cycle to be used in the plot.
+# @note The reference signal could be a Delta function or a Low-Pass filter.
 def PlotRealSignal(signal, reference_signal, title="Signal", reference_label="Deltas", pulse="Pulso", fs_MHz=16.0, CB_color_cycle=None):
     if CB_color_cycle is None:
         CB_color_cycle = (
@@ -68,6 +89,17 @@ def PlotRealSignal(signal, reference_signal, title="Signal", reference_label="De
     # plt.tight_layout()
     plt.show()
 
+## Function to plot the real and imaginary parts of a complex signal and its reference signal.
+# @param signal The complex signal to be plotted.
+# @param reference_signal The reference signal to be plotted.
+# @param title The title of the plot.
+# @param reference_label The label for the reference signal.
+# @param pulse The label for the pulse signal.
+# @param fs_MHz The sampling frequency in MHz.
+# @param CB_color_cycle The color cycle to be used in the plot.
+# @note The reference signal could be a Delta function or a Low-Pass filter.
+# @note The function plots the real and imaginary parts of the signal in two separate subplots.
+# @note The function uses the stem plot style for the signals.
 def PlotComplexSignal(signal, reference_signal, title="Signal", reference_label="Deltas", pulse="Pulso", fs_MHz=16.0, CB_color_cycle=None):
     if CB_color_cycle is None:
         CB_color_cycle = (
@@ -128,6 +160,20 @@ def PlotComplexSignal(signal, reference_signal, title="Signal", reference_label=
     # plt.tight_layout()
     plt.show()
 
+
+## Function to plot the real part of a signal and its reference signal in a dual plot.
+# @param signal The signal to be plotted.
+# @param reference_signal The reference signal to be plotted.
+# @param num_stages The number of stages in the plot.
+# @param title The title of the plot.
+# @param reference_label The label for the reference signal.
+# @param pulse The label for the pulse signal.
+# @param fs_MHz The sampling frequency in MHz.
+# @param CB_color_cycle The color cycle to be used in the plot.
+# @note The function uses a stem plot style for the signals.
+# @note The function keeps track of the number of times it has been called to create subplots.
+# @note The function shows the plot after all calls.
+# @note The function uses a shared x-axis for all subplots.
 def PlotRealSignalDual(signal, reference_signal, num_stages, title="Signal", reference_label="Deltas", pulse="Pulso", fs_MHz=16.0, CB_color_cycle=None):
     if CB_color_cycle is None:
         CB_color_cycle = (
@@ -194,43 +240,68 @@ def PlotRealSignalDual(signal, reference_signal, num_stages, title="Signal", ref
         plt.tight_layout()
         plt.show()
 
+
+## Function to create a packet from a byte sequence.
+# @param byte_seq The byte sequence to be converted into a packet.
+# @param spar The system parameters.
+# @return x : Tuple containing the packet in -1 and +1 format.
+# @return data : Numpy array containing the data only (no preamble or SFD).
+# @note The function creates a preamble, SFD, and data from the byte sequence.
+# @note The function returns the packet and the data as numpy arrays.
 def create_packet(byte_seq, spar):
+    # pre : create preamble 
     pre = np.zeros(spar['n_pre'], dtype=int)
     pre[1::2] = 1
 
+    # sfd : create the start frame delimiter
     sfd = np.zeros(spar['n_sfd'], dtype=int)
     if spar['n_pre'] % 2 == 0:
         sfd[0::2] = 1
     else:
         sfd[1::2] = 1
 
+    # data: create the data from the byte sequence 
     data = np.hstack([np.array(list(np.binary_repr(byte, 8)), dtype=int) for byte in byte_seq])
 
     packet = np.hstack([pre, sfd, data])
 
+    # x : convert 0 to -1 and 1 to +1
     x = 2 * packet - 1
 
     return x, data
 
+
+## Function to modulate a byte sequence using a specified pulse shape and generates a modulated
+# signal ready to be transmitted.
+# @param byte_seq The byte sequence to be modulated.
+# @param spar The system parameters.
+# @return xxx : Tuple containing the modulated signal ready to be transmitted.
+# @return mis : Dictionary containing the modulated signal and the data bits.
 def modulator(byte_seq, spar):
+    # Verify that all values in byte_seq are between 0 and 255
     assert np.all(np.array(byte_seq) <= 255), "All values in byte_seq must be between 0 and 255"
 
+    # Create the packet from the byte sequence
     x, data = create_packet(byte_seq, spar)
     xx = np.zeros(len(x) * spar['n_pulse'])
     xx[::spar['n_pulse']] = x
     xxx = np.convolve(xx, spar['pulse'])
 
-    # Igualar longitudes rellenando xx con ceros
+    # Pad (put zeros) the signal to match the length of the original packet
     pad_size = (len(xxx) - len(xx)) // 2
     xx_padded = np.pad(xx, (pad_size, len(xxx) - len(xx) - pad_size), mode='constant')
 
+    # Prepare the output
     mis = {'d': xx_padded, 'bits': data}
 
     return xxx, mis
 
 
 
-# Placeholder function for pulse shaping
+## Function that select and generate a pulse based on the specified parameters.
+# @param Ts The sampling period.
+# @param Tsymb The symbol period.
+# @param type The type of pulse to be generated. Options are 'sq', 'sin', 'tr', 'rc', 'rrc'.
 def pulse(Ts, Tsymb, type : str):
     fs_MHz = 1/Ts/1000
     f0_MHz = 1/Tsymb/1000
@@ -250,59 +321,88 @@ def pulse(Ts, Tsymb, type : str):
         raise KeyError("Key is not valid")
 
 
-
+## @cond
 ###############################################################################################
+# Main implementation to simulate a communication system with modulation and demodulation.
+###############################################################################################
+# System parameters for the implementation
+## @endcond
 
-# System Parameters
-Tsymb = 1e-3  # Symbol Period
-Ts = Tsymb / 16  # Sampling Period
+## Symbol Period
+Tsymb = 1e-3   
+## Sampling Period
+Ts = Tsymb / 16      
+## Sampling Frequency in MHz                                                               
 fs_MHz = int(1/Ts/1000)
+## Frequency of the signal in MHz                                                            
 f0_MHz = int(1/Tsymb/1000)
+## Energy of the pulse in J                                                          
 E_pulse = 1e-6
-selected_channel_type = 1  # 0: Delta, 1: Pasa Bajos
+## 0: Delta, 1: Pasa Bajos                                                                      
+selected_channel_type = 1
+## Phase of the delta pulse in radians                                                           
 delta_phase = 0
-samples = int(np.ceil(fs_MHz/f0_MHz))
+## Number of samples per symbol                                                                     
+samples = int(np.ceil(fs_MHz/f0_MHz))                                               
 # PWR_N = 0.01
+## Array of PLL KP values
 pll_kp_array = np.arange(0 , 5, 0.05)
-pll_ki_array = np.arange(0 , 0.15, 0.01)
-# Parámetros
-ITERATIONS = 10  # Para promediar errores
+## Array of PLL KI values                                               
+pll_ki_array = np.arange(0 , 0.15, 0.01)                                            
+## Number of iterations for averaging
+ITERATIONS = 10
+## Array of SNR values in dB                                                                     
 snr_dB_array = [80, 40, 20, 10, 5, 0]
-error_avg = np.zeros((len(pll_ki_array), len(snr_dB_array), len(pll_kp_array)))
+## Array to store the average error for each combination of KP and KI                                               
+error_avg = np.zeros((len(pll_ki_array), len(snr_dB_array), len(pll_kp_array)))     
 
+# Main loop to iterate over the number of iterations and combinations of noise and PLL parameters
 for j in range(ITERATIONS):
     print(f"Iteración {j+1}")
+
+    # Loop through each power noise value in the SNR array
     for noise_index, power_noise in enumerate(snr_dB_array):
+
+        # Loop through each PLL KI value
         for ki_index, pll_ki in enumerate(pll_ki_array):
+
+            # Loop through each PLL KP value
             for kp_index, pll_kp in enumerate(pll_kp_array):
 
-                # Canal
+                # Select channel model
                 if selected_channel_type == 0:
+                    # Use delta pulse channel
                     h = DeltaPulse(fs_MHz=fs_MHz, f0_MHz=f0_MHz, samples=samples, phase=delta_phase)
                 else:
+                    # Use low-pass FIR filter as channel
                     h = LowPassFilterFIR(fs_MHz=fs_MHz, fc_MHz=fs_MHz/20, order=samples)
 
+                # Channel model: convolution with h and add AWGN
                 def channel(x, pwr_n, h):
+                    # Apply channel effect
                     y = np.convolve(x, h)
+                    # Add Gaussian noise
                     y = AddAWGN(y, pwr_n)
                     return y
-
+                # Generate pulse shape and filter order
                 pulse_shape, n_fir = pulse(Ts, Tsymb, 'rrc')
+
+
                 spar = {
-                    'Tsymb': Tsymb,
-                    'Ts': Ts,
-                    'n_bytes': 4,
-                    'n_pre': 16,
-                    'n_sfd': 2,
-                    'pulse': pulse_shape,
-                    'n_pulse': int(Tsymb / Ts),
-                    'E_pulse': E_pulse,
-                    'n_fir': n_fir,
-                    'det_th': 0.25,
-                    'pll': {'kp': pll_kp, 'ki': pll_ki, 'delay': 0}
+                    'Tsymb': Tsymb,                                 # Symbol period
+                    'Ts': Ts,                                       # Sampling period
+                    'n_bytes': 4,                                   # Bytes per frame
+                    'n_pre': 16,                                    # Number of preamble symbols
+                    'n_sfd': 2,                                     # Start Frame Delimiter
+                    'pulse': pulse_shape,                           # Pulse shape
+                    'n_pulse': int(Tsymb / Ts),                     # Samples per symbol
+                    'E_pulse': E_pulse,                             # Energy of pulse
+                    'n_fir': n_fir,                                 # Length of matched filter
+                    'det_th': 0.25,                                 # Detection threshold
+                    'pll': {'kp': pll_kp, 'ki': pll_ki, 'delay': 0} # PLL config
                 }
 
-                # Modulación
+                # Transmission and time references setup
                 N_TX = 10
                 N_ZEROS = 123
                 kzeros = Ts * N_ZEROS
@@ -312,35 +412,51 @@ for j in range(ITERATIONS):
                 kend = kzeros + khalfp + kmod
                 data_sent, x, d, k, bits_sent = [], np.array([]), [], np.array([]), []
                 kk = np.arange(k0, kend, Tsymb)
-
+                
+                # Modulate and concatenate all packets
                 for i in range(N_TX):
+                    # Create byte sequence
                     bytes_seq = np.arange(1 + i, spar['n_bytes'] + 1 + i)
                     data_sent.extend(bytes_seq)
+                    
+                    # Modulate the packet
                     xaux, mis = modulator(bytes_seq, spar)
                     x = np.concatenate((x, np.zeros(N_ZEROS), xaux))
+
+                    # Concatenate zeros + signal
                     d.extend([np.zeros(N_ZEROS), mis['d']])
                     bits_sent.extend(mis["bits"])
                     k = np.concatenate((k, kk + (kend + khalfp) * i))
 
+                # Combine all transmitted signals
                 d = np.concatenate(d)
                 # PlotRealSignalDual(x, d, num_stages=3)
-                # Canal y demodulación
+
+                # Pass signal through the channel
                 c = channel(x, power_noise, h)
                 # PlotRealSignalDual(c, d,num_stages=3)
+
+                # Demodulate the received signal
                 hat_bytes, dis = demodulator(c, spar)
+
+                # Compute number of errors
                 len_diff = abs(len(data_sent) - len(hat_bytes))
 
                 if len(hat_bytes) > len(data_sent):
                     errores = np.count_nonzero(np.array(hat_bytes[:len(data_sent)]) != np.array(data_sent))
                 else:
                     errores = np.count_nonzero(np.array(hat_bytes) != np.array(data_sent[:len(hat_bytes)]))
+                
+                # Compute error percentage
                 error_pct = (errores + len_diff) / len(data_sent) * 100
-                # print(f"Elementos distintos: {errores}")
-                # print(f"Porcentaje de error: {error_pct}%")
+                # print(f"Different elements: {errores}")
+                # print(f"Percentage of errors: {error_pct}%")
                 # PlotRealSignalDual(dis['y_mf'], d, num_stages=3)
+
+                # Accumulate average error for current (ki, snr, kp) config
                 error_avg[ki_index, noise_index, kp_index] += error_pct
 
-# Promediar sobre iteraciones
+# Averaging the error across iterations
 error_avg /= ITERATIONS
 
 error_global = np.mean(error_avg, axis=1)  # Promedia sobre el eje del ruido: (KI, KP)
@@ -356,13 +472,17 @@ error_total = np.transpose(error_avg, (1, 0, 2))  # shape: [noise_index, ki_inde
 
 X_kp, Y_ki = np.meshgrid(pll_kp_array, pll_ki_array)
 
-
+# Quantity of plots to be generated
 num_plots = len(snr_dB_array)
-cols = math.ceil(np.sqrt(num_plots))          # Cantidad de columnas
-rows = math.ceil(num_plots / cols)            # Cantidad de filas
+# Quantity of columns for the subplots
+cols = math.ceil(np.sqrt(num_plots))
+# Quantity of rows for the subplots
+rows = math.ceil(num_plots / cols)
 
+# Create the figure and axes for the subplots
 fig, axes = plt.subplots(rows, cols, figsize=(4*cols, 3.5*rows), squeeze=False)
 
+# Loop through each SNR value and plot the corresponding error heatmap
 for idx, snr_dB in enumerate(snr_dB_array):
     row = idx // cols
     col = idx % cols
@@ -375,10 +495,10 @@ for idx, snr_dB in enumerate(snr_dB_array):
     ax.set_xlabel('PLL KP')
     ax.set_ylabel('PLL KI')
 
-    # Agregá colorbar por subplot si querés
+    # Add colorbar to the heatmap
     fig.colorbar(heatmap, ax=ax)
 
-# Si hay subplots vacíos, ocultalos
+# If there are empty subplots, hide them
 for i in range(num_plots, rows * cols):
     fig.delaxes(axes[i // cols, i % cols])
 
