@@ -15,15 +15,15 @@ from scipy.signal import lfilter
 #  @details This class performs matched filtering, detection, and symbol synchronization using a phase-locked loop (PLL) to extract transmitted bytes from a received waveform.
 class Demodulator:
     ## @brief Constructor for the Demodulator class.
-    #  @param pulse The pulse shape used in transmission.
-    #  @param n_bytes Number of bytes expected in the payload.
-    #  @param Tsymb Symbol period.
-    #  @param Ts Sampling period.
-    #  @param n_sfd Number of symbols in the start frame delimiter (SFD).
-    #  @param n_pre Number of symbols in the preamble.
-    #  @param det_th Detection threshold for energy detection.
-    #  @param pll Dictionary of PLL parameters: kp (proportional gain), ki (integral gain), and delay.
-    def __init__(self, pulse, n_bytes:int, Tsymb, Ts, n_sfd, n_pre, det_th:float=0.25, pll={'kp': 0.1, 'ki': 0.01, 'delay': 0}):
+    #  @param pulse (np.ndarray) The pulse shape used in transmission.
+    #  @param n_bytes (int) Number of bytes expected in the payload.
+    #  @param Tsymb (float) Symbol period.
+    #  @param Ts (float) Sampling period.
+    #  @param n_sfd (int) Number of symbols in the start frame delimiter (SFD).
+    #  @param n_pre (int) Number of symbols in the preamble.
+    #  @param det_th (float) Detection threshold for energy detection.
+    #  @param pll (dict) Dictionary of PLL parameters: kp (proportional gain), ki (integral gain), and delay.
+    def __init__(self, pulse: np.ndarray, n_bytes: int, Tsymb: float, Ts: float, n_sfd: int, n_pre: int, det_th: float = 0.25, pll: dict = {'kp': 0.1, 'ki': 0.01, 'delay': 0}):
         self._pulse = pulse
         self._Tsymb = Tsymb
         self._Ts = Ts
@@ -36,18 +36,20 @@ class Demodulator:
         self._n_bytes = n_bytes
 
     ## @brief Getter for the last demodulation diagnostic information.
+    #  @return (dict | None) Last demodulation diagnostics or None if not available.
     @property
-    def last_dis(self):
+    def last_dis(self) -> dict | None:
         return self._last_dis
 
     ## @brief Getter for PLL parameters.
+    #  @return (dict) PLL parameters dictionary.
     @property
-    def pll_params(self):
+    def pll_params(self) -> dict:
         return self._pll_params
 
     ## @brief Setter for PLL parameters with validation.
-    #  @param value Dictionary with 'kp', 'ki', and 'delay' keys.
-    #  @throws ValueError If the input is not a valid dictionary or contains invalid values.
+    #  @param value (dict) Dictionary with 'kp', 'ki', and 'delay' keys.
+    #  @raises ValueError If the input is not a valid dictionary or contains invalid values.
     @pll_params.setter
     def pll_params(self, value: dict):
         if not isinstance(value, dict):
@@ -63,14 +65,14 @@ class Demodulator:
         self._pll_params = value
 
     ## @brief Phase-Locked Loop for symbol timing recovery.
-    #  @param input_signal Input signal to synchronize.
-    #  @param f0 Nominal frequency of the clock (1 / Tsymb).
-    #  @param fs Sampling frequency (1 / Ts).
-    #  @param kp Proportional gain of PLL.
-    #  @param ki Integral gain of PLL.
-    #  @param delay Delay in feedback loop.
-    #  @return Tuple of VCO signal and a dictionary of PLL internals ('phd', 'err', 'phi_hat').
-    def pll(self, input_signal, f0, fs, kp, ki, delay=0):
+    #  @param input_signal (np.ndarray) Input signal to synchronize.
+    #  @param f0 (float) Nominal frequency of the clock (1 / Tsymb).
+    #  @param fs (float) Sampling frequency (1 / Ts).
+    #  @param kp (float) Proportional gain of PLL.
+    #  @param ki (float) Integral gain of PLL.
+    #  @param delay (int) Delay in feedback loop.
+    #  @return (tuple) Tuple of VCO signal (np.ndarray) and a dictionary of PLL internals ('phd', 'err', 'phi_hat').
+    def pll(self, input_signal: np.ndarray, f0: float, fs: float, kp: float, ki: float, delay: int = 0) -> tuple[np.ndarray, dict]:
         phi_hat = np.zeros(len(input_signal) + delay)
         err = np.zeros(len(input_signal) + delay)
         phd = np.zeros(len(input_signal) + delay)
@@ -90,9 +92,9 @@ class Demodulator:
         return vco, pllis
 
     ## @brief Performs full demodulation of the received signal.
-    #  @param y The received signal.
-    #  @return List of decoded bytes.
-    def demodulate(self, y):
+    #  @param y (np.ndarray) The received signal.
+    #  @return (list) List of decoded bytes.
+    def demodulate(self, y: np.ndarray) -> list:
         y_mf = lfilter(self._pulse, [1], y)
         y_mf /= np.sum(self._pulse**2)
 
@@ -163,6 +165,7 @@ class Demodulator:
         return hat_bytes
 
     ## @brief Returns the last stored demodulation diagnostics.
+    #  @return (dict | None) Last demodulation diagnostics or None if not available.
     @property
-    def dis(self):
+    def dis(self) -> dict | None:
         return self._last_dis

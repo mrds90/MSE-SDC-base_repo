@@ -19,22 +19,22 @@ class Modulator:
     """
 
     ## @brief Constructor for Modulator
-    #  @param n_bytes Number of bytes in the payload
-    #  @param n_pre Number of bits in the preamble
-    #  @param n_sfd Number of bits in the start frame delimiter (SFD)
-    #  @param pulse Name of the pulse shape to use (passed to PulseGenerator)
-    #  @param Ts Sampling interval
-    #  @param Tsymb Symbol duration
-    def __init__(self, n_bytes, n_pre, n_sfd, pulse:str, Ts, Tsymb):
+    #  @param n_bytes (int) Number of bytes in the payload
+    #  @param n_pre (int) Number of bits in the preamble
+    #  @param n_sfd (int) Number of bits in the start frame delimiter (SFD)
+    #  @param pulse (str) Name of the pulse shape to use (passed to PulseGenerator)
+    #  @param Ts (float) Sampling interval
+    #  @param Tsymb (float) Symbol duration
+    def __init__(self, n_bytes: int, n_pre: int, n_sfd: int, pulse: str, Ts: float, Tsymb: float):
         self._n_bytes = n_bytes
         self._n_pre = n_pre
         self._n_sfd = n_sfd
         self._pulse = PulseGenerator(pulse, Ts, Tsymb)
 
     ## @brief Creates a packet with preamble, SFD, and data bits
-    #  @param byte_seq Sequence of bytes to encode
-    #  @return A tuple (x, data) where x is the bipolar sequence and data is the binary array of payload bits
-    def create_packet(self, byte_seq):
+    #  @param byte_seq (np.ndarray or list) Sequence of bytes to encode
+    #  @return tuple[np.ndarray, np.ndarray] A tuple (x, data) where x is the bipolar sequence and data is the binary array of payload bits
+    def create_packet(self, byte_seq: np.ndarray | list) -> tuple[np.ndarray, np.ndarray]:
         pre = np.zeros(self._n_pre, dtype=int)
         pre[1::2] = 1
         sfd = np.zeros(self._n_sfd, dtype=int)
@@ -48,9 +48,9 @@ class Modulator:
         return x, data
 
     ## @brief Modulates a sequence of bytes into a baseband waveform
-    #  @param byte_seq Sequence of bytes to modulate (values must be in [0, 255])
-    #  @return The modulated signal (convolved with pulse shape)
-    def modulate(self, byte_seq):
+    #  @param byte_seq (np.ndarray or list) Sequence of bytes to modulate (values must be in [0, 255])
+    #  @return np.ndarray The modulated signal (convolved with pulse shape)
+    def modulate(self, byte_seq: np.ndarray | list) -> np.ndarray:
         assert np.all(np.array(byte_seq) <= 255), "All values in byte_seq must be between 0 and 255"
         x, self._bits = self.create_packet(byte_seq)
         xx = np.zeros(len(x) * self._pulse.n_pulse)
@@ -61,51 +61,61 @@ class Modulator:
         return xxx
 
     ## @brief Returns number of bytes in the payload
+    #  @return int
     @property
-    def n_bytes(self):
+    def n_bytes(self) -> int:
         return self._n_bytes
 
     ## @brief Returns number of bits in the preamble
+    #  @return int
     @property
-    def n_pre(self):
+    def n_pre(self) -> int:
         return self._n_pre
 
     ## @brief Returns number of bits in the start frame delimiter (SFD)
+    #  @return int
     @property
-    def n_sfd(self):
+    def n_sfd(self) -> int:
         return self._n_sfd
 
     ## @brief Returns number of samples per symbol (pulse length)
+    #  @return int
     @property
-    def n_pulse(self):
+    def n_pulse(self) -> int:
         return self._pulse.n_pulse
 
     ## @brief Returns the pulse shape used for modulation
+    #  @return np.ndarray
     @property
-    def pulse(self):
+    def pulse(self) -> np.ndarray:
         return self._pulse.pulse
 
     ## @brief Returns the sampling interval
+    #  @return float
     @property
-    def Ts(self):
+    def Ts(self) -> float:
         return self._pulse.Ts
 
     ## @brief Returns the symbol duration
+    #  @return float
     @property
-    def Tsymb(self):
+    def Tsymb(self) -> float:
         return self._pulse.Tsymb
 
     ## @brief Returns the length of the FIR pulse filter
+    #  @return int
     @property
-    def n_fir(self):
+    def n_fir(self) -> int:
         return self._pulse._n_fir
 
     ## @brief Returns the binary payload bits
+    #  @return np.ndarray
     @property
-    def bits(self):
+    def bits(self) -> np.ndarray:
         return self._bits
 
     ## @brief Returns the zero-padded version of the bipolar signal before convolution
+    #  @return np.ndarray
     @property
-    def d(self):
+    def d(self) -> np.ndarray:
         return self._d

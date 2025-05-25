@@ -1,0 +1,5 @@
+*.cpython-38.pyc
+*.venv
+*.pyc
+__pycache__
+docs/

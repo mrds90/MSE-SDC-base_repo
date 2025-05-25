@@ -15,16 +15,16 @@ from scipy.signal import firwin
 #           Adds AWGN to the transmitted signal based on a configurable SNR.
 class Channel:
     ## @brief Constructs a Channel instance.
-    #  @param channel_type Type of channel: 'delta' or 'fir'.
-    #  @param fs_MHz Sampling frequency in MHz.
-    #  @param f0_MHz Carrier or cutoff frequency in MHz.
-    #  @param phase Phase shift in degrees for 'delta' channel. Default is 0.
-    #  @param snr_dB Signal-to-noise ratio in dB. Default is None (no noise).
-    #  @param kwargs Additional parameters:
+    #  @param channel_type (str) Type of channel: 'delta' or 'fir'.
+    #  @param fs_MHz (float) Sampling frequency in MHz.
+    #  @param f0_MHz (float) Carrier or cutoff frequency in MHz.
+    #  @param phase (float) Phase shift in degrees for 'delta' channel. Default is 0.
+    #  @param snr_dB (float | None) Signal-to-noise ratio in dB. Default is None (no noise).
+    #  @param kwargs (dict) Additional parameters:
     #         - 'samples': number of samples for delta channel.
     #         - 'order': FIR filter order for 'fir' channel.
     #  @raises ValueError If required parameters are missing or invalid.
-    def __init__(self, channel_type, fs_MHz, f0_MHz, phase=0, snr_dB: float | None = None, **kwargs):
+    def __init__(self, channel_type: str, fs_MHz: float, f0_MHz: float, phase: float = 0, snr_dB: float | None = None, **kwargs):
         if channel_type == 'delta':
             samples = kwargs.get('samples')
             if samples is None:
@@ -40,8 +40,8 @@ class Channel:
         self._snr_dB = snr_dB
 
     ## @brief Adds Additive White Gaussian Noise (AWGN) to the input signal.
-    #  @param signal Input signal as a NumPy array.
-    #  @return Noisy signal as a NumPy array.
+    #  @param signal (np.ndarray) Input signal as a NumPy array.
+    #  @return (np.ndarray) Noisy signal as a NumPy array.
     #  @raises ValueError If input is not a NumPy array.
     def add_awgn(self, signal: np.ndarray) -> np.ndarray:
         if not isinstance(signal, np.ndarray):
@@ -57,8 +57,8 @@ class Channel:
         return signal + noise
 
     ## @brief Applies the channel effect (filtering) and adds AWGN to the input signal.
-    #  @param signal Input signal as a NumPy array.
-    #  @return Output signal after convolution with the channel and noise addition.
+    #  @param signal (np.ndarray) Input signal as a NumPy array.
+    #  @return (np.ndarray) Output signal after convolution with the channel and noise addition.
     #  @raises ValueError If input is not a NumPy array.
     def transmit(self, signal: np.ndarray) -> np.ndarray:
         if not isinstance(signal, np.ndarray):
@@ -68,11 +68,11 @@ class Channel:
         return y
 
     ## @brief Generates a delta pulse with optional phase shift.
-    #  @param fs_MHz Sampling frequency in MHz.
-    #  @param f0_MHz Frequency used to calculate samples per cycle.
-    #  @param samples Number of samples in the output pulse.
-    #  @param phase Phase shift in degrees (0 to <360).
-    #  @return Delta pulse as a NumPy array.
+    #  @param fs_MHz (float) Sampling frequency in MHz.
+    #  @param f0_MHz (float) Frequency used to calculate samples per cycle.
+    #  @param samples (int) Number of samples in the output pulse.
+    #  @param phase (float) Phase shift in degrees (0 to <360).
+    #  @return (np.ndarray) Delta pulse as a NumPy array.
     #  @raises ValueError If phase is outside [0, 360) or pulse index exceeds array bounds.
     def _delta_pulse(self, fs_MHz: float, f0_MHz: float, samples: int, phase: float) -> np.ndarray:
         if not (0 <= phase < 360):
@@ -86,27 +86,27 @@ class Channel:
         return delta_pulse
 
     ## @brief Designs a low-pass FIR filter using windowed-sinc method.
-    #  @param fs_MHz Sampling frequency in MHz.
-    #  @param f0_MHz Cutoff frequency in MHz.
-    #  @param order Filter order.
-    #  @return FIR filter coefficients as a NumPy array.
-    def _low_pass_fir(self, fs_MHz, f0_MHz, order):
+    #  @param fs_MHz (float) Sampling frequency in MHz.
+    #  @param f0_MHz (float) Cutoff frequency in MHz.
+    #  @param order (int) Filter order.
+    #  @return (np.ndarray) FIR filter coefficients as a NumPy array.
+    def _low_pass_fir(self, fs_MHz: float, f0_MHz: float, order: int) -> np.ndarray:
         nyquist = 0.5 * fs_MHz
         norm_cutoff = f0_MHz / nyquist
         fir_coeffs = firwin(order, norm_cutoff)
         return fir_coeffs
 
     ## @brief Getter for the signal-to-noise ratio (SNR) in dB.
-    #  @return SNR in decibels.
+    #  @return (float | None) SNR in decibels.
     @property
-    def snr_dB(self):
+    def snr_dB(self) -> float | None:
         return self._snr_dB
 
     ## @brief Setter for the signal-to-noise ratio (SNR) in dB.
-    #  @param value SNR value to set, must be numeric.
+    #  @param value (float | None) SNR value to set, must be numeric.
     #  @raises ValueError If value is not a number.
     @snr_dB.setter
-    def snr_dB(self, value):
+    def snr_dB(self, value: float | None):
         if not isinstance(value, (int, float, type(None))):
             raise ValueError("The 'snr_dB' argument must be a numeric value or None.")
         self._snr_dB = value
