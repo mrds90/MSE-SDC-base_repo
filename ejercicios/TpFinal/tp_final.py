@@ -170,7 +170,10 @@ def main():
         ax = axes[row, col]
         Z_error = error_avg[:, idx, :]
         heatmap = ax.pcolormesh(X_kp, Y_ki, Z_error, shading='auto', cmap='viridis')
-        ax.set_title(f'SNR = {snr_dB:.1f} dB')
+        if snr_dB is not None:
+            ax.set_title(f'SNR = {snr_dB:.1f} dB')
+        else:
+            ax.set_title('No noise (ideal case)')
         ax.set_xlabel('PLL KP')
         ax.set_ylabel('PLL KI')
         fig.colorbar(heatmap, ax=ax)
