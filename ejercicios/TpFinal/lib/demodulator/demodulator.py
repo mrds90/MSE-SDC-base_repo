@@ -1,7 +1,7 @@
 ## @file demodulator.py
 # @brief Module containing the Demodulator class for digital signal demodulation.
 # @details This module implements a Demodulator class that handles signal reception and demodulation
-# for a digital communication system. It performs matched filtering, detection, and symbol 
+# for a digital communication system. It performs matched filtering, detection, and symbol
 # synchronization using a phase-locked loop (PLL) to recover transmitted data.
 # @author Marcos Dominguez
 # @author Lucas Monzon Languasco

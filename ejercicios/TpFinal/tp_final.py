@@ -68,7 +68,7 @@ def main():
 
     ## @var snr_dB_array
     #  @brief List of SNR values in decibels to be tested.
-    snr_dB_array = [30, 10, 5, 0]
+    snr_dB_array = [None, 10, 5, 0]
 
     ## @var error_avg
     #  @brief Array to store the average error percentage for each combination of PLL parameters and SNR.
@@ -130,7 +130,15 @@ def main():
                         plt_process = Plotter(num_stages=3, fs_MHz=fs_MHz)
                         plt_process.add_plot(x, d, title="Signal")
                         plt_process.add_plot(c, d, title="Signal after Channel")
-                        plt_process.add_plot(demodulator.dis['y_mf'], demodulator.dis['y_mf']*demodulator.dis['en_sample']/abs(demodulator.dis['y_mf']), title="Signal after match filter")
+                        y_mf = demodulator.dis['y_mf']
+                        en_sample = demodulator.dis['en_sample']
+                        abs_y_mf = np.abs(y_mf)
+                        EPSILON = 1e-10
+                        normalized_signal = np.zeros_like(y_mf)
+                        valid_indices = (abs_y_mf > EPSILON)
+                        normalized_signal[valid_indices] = y_mf[valid_indices] / abs_y_mf[valid_indices]
+                        safe_division = normalized_signal * en_sample
+                        plt_process.add_plot(y_mf, safe_division, title="Signal after match filter")
                         bit_received = np.unpackbits(hat_bytes)
                         print(f"Errors: {errores}, Len diff: {len_diff}, Error %: {error_pct:.2f}%")
                         plt_bytes = Plotter(num_stages=1, fs_MHz=fs_MHz)

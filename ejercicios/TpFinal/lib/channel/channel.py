@@ -19,12 +19,12 @@ class Channel:
     #  @param fs_MHz Sampling frequency in MHz.
     #  @param f0_MHz Carrier or cutoff frequency in MHz.
     #  @param phase Phase shift in degrees for 'delta' channel. Default is 0.
-    #  @param snr_dB Signal-to-noise ratio in dB. Default is 0 (no noise).
+    #  @param snr_dB Signal-to-noise ratio in dB. Default is None (no noise).
     #  @param kwargs Additional parameters:
     #         - 'samples': number of samples for delta channel.
     #         - 'order': FIR filter order for 'fir' channel.
     #  @raises ValueError If required parameters are missing or invalid.
-    def __init__(self, channel_type, fs_MHz, f0_MHz, phase=0, snr_dB: float = 0, **kwargs):
+    def __init__(self, channel_type, fs_MHz, f0_MHz, phase=0, snr_dB: float | None = None, **kwargs):
         if channel_type == 'delta':
             samples = kwargs.get('samples')
             if samples is None:
@@ -46,6 +46,9 @@ class Channel:
     def add_awgn(self, signal: np.ndarray) -> np.ndarray:
         if not isinstance(signal, np.ndarray):
             raise ValueError("The signal must be a numpy array.")
+        if self._snr_dB is None:
+            return signal
+
         signal_power = np.mean(np.abs(signal)**2)
         snr_linear = 10**(self._snr_dB / 10)
         noise_power = signal_power / snr_linear
@@ -104,6 +107,6 @@ class Channel:
     #  @raises ValueError If value is not a number.
     @snr_dB.setter
     def snr_dB(self, value):
-        if not isinstance(value, (int, float)):
-            raise ValueError("The 'snr_dB' argument must be a numeric value.")
+        if not isinstance(value, (int, float, type(None))):
+            raise ValueError("The 'snr_dB' argument must be a numeric value or None.")
         self._snr_dB = value

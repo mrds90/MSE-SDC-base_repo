@@ -35,21 +35,21 @@ class PulseGenerator:
                 raise ValueError(f"Invalid pulse type: {type}. Use 'sq', 'sin', 'tr', 'rc', or 'rrc'.")
 
         return pulse_shape, len(pulse_shape)
-            
+
     def square_pulse(self, fs_MHz, f0_MHz, samples):
         t_us = self.time_vector(fs_MHz, samples)
         signal = np.sign(np.sin(2 * np.pi * (f0_MHz/2) * t_us))
         signal[signal < 0] = 0
         return signal
-    
+
     def sine_pulse(self, fs_MHz, f0_MHz, samples):
         t_us = self.time_vector(fs_MHz, samples)
         return np.sin(2 * np.pi * (f0_MHz/2) * t_us)
-    
+
     def triangular_pulse(self, fs_MHz, f0_MHz, samples):
         t_us = self.time_vector(fs_MHz, samples)
         return (2 / np.pi) * np.arcsin(np.sin(2 * np.pi * (f0_MHz/2) * t_us))
-    
+
     def raised_cosine_pulse(self, fs_MHz, f0_MHz, beta, samples):
         t = np.arange(-3 * samples + 1,  3 * samples + 1) / fs_MHz
         T0=1/f0_MHz
@@ -60,7 +60,7 @@ class PulseGenerator:
         signal[t==T0/2/beta] = np.pi/4/T0*np.sinc(1/2/beta)
         signal[t==-T0/2/beta] = np.pi/4/T0*np.sinc(1/2/beta)
         return signal
-    
+
     def root_raised_cosine_pulse(self, fs_MHz, f0_MHz, beta, samples):
         t = np.arange(-3 * samples + 1,  3 * samples + 1) / fs_MHz
         T0=1/f0_MHz
@@ -73,11 +73,11 @@ class PulseGenerator:
         signal [t==T0/4/beta] = beta/T0/np.sqrt(2)*((1+2/np.pi)*np.sin(np.pi/4/beta)+(1-2/np.pi)*np.cos(np.pi/4/beta))
         signal [t==-T0/4/beta] = beta/T0/np.sqrt(2)*((1+2/np.pi)*np.sin(np.pi/4/beta)+(1-2/np.pi)*np.cos(np.pi/4/beta))
         return signal
-    
+
     @staticmethod
     def time_vector(fs_MHz, samples):
         return np.arange(1, samples + 1) / fs_MHz
-    
+
     @property
     def n_pulse(self):
         return self._n_pulse
@@ -93,4 +93,3 @@ class PulseGenerator:
     @property
     def n_fir(self):
         return self._n_fir
-    
