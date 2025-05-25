@@ -14,7 +14,31 @@ from lib.modulator.modulator import Modulator
 from lib.demodulator.demodulator import Demodulator
 from lib.channel.channel import Channel
 from lib.plotter.plotter import Plotter
+from tqdm import tqdm
 # =============================================================================================================================
+
+def process_iteration(j, snr_dB_array, pll_ki_array, pll_kp_array, channel, modulator, x, data_sent):
+    error_results = np.zeros((len(pll_ki_array), len(snr_dB_array), len(pll_kp_array)))
+    demodulator = Demodulator(modulator.pulse, n_bytes=4, Ts=modulator.Ts, Tsymb=modulator.Tsymb, n_pre=16, n_sfd=2)
+    
+    for noise_index, snr_dB in enumerate(snr_dB_array):
+        channel.snr_dB = snr_dB
+        for ki_index, pll_ki in enumerate(pll_ki_array):
+            for kp_index, pll_kp in enumerate(pll_kp_array):
+                c = channel.transmit(x)
+                demodulator.pll_params = {'kp': pll_kp, 'ki': pll_ki, 'delay': 0}
+                hat_bytes = demodulator.demodulate(c)
+
+                len_diff = abs(len(data_sent) - len(hat_bytes))
+                if len(hat_bytes) > len(data_sent):
+                    errores = np.count_nonzero(np.array(hat_bytes[:len(data_sent)]) != np.array(data_sent))
+                else:
+                    errores = np.count_nonzero(np.array(hat_bytes) != np.array(data_sent[:len(hat_bytes)]))
+
+                error_pct = (errores + len_diff) / len(data_sent) * 100
+                error_results[ki_index, noise_index, kp_index] = error_pct
+    
+    return error_results
 
 ## @brief Main function that runs the simulation of the communication system.
 # @details Parses command-line arguments and performs modulation, transmission through a simulated channel,
@@ -64,7 +88,7 @@ def main():
 
     ## @var ITERATIONS
     #  @brief Number of iterations to average results.
-    ITERATIONS = 10
+    ITERATIONS = 5
 
     ## @var snr_dB_array
     #  @brief List of SNR values in decibels to be tested.
@@ -105,10 +129,10 @@ def main():
         bits_sent.extend(modulator.bits)
         k = np.concatenate((k, kk + (kend + khalfp) * i))
     d = np.concatenate(d)
-
+    total = ITERATIONS * len(snr_dB_array) * len(pll_ki_array) * len(pll_kp_array)
+    progress = tqdm(total=total, desc="Simulation Progress")
     ## @brief Simulation loop for each iteration, SNR, and PLL parameter combination.
     for j in range(ITERATIONS):
-        print(f"Iteration {j+1}")
         for noise_index, snr_dB in enumerate(snr_dB_array):
             for ki_index, pll_ki in enumerate(pll_ki_array):
                 for kp_index, pll_kp in enumerate(pll_kp_array):
@@ -147,6 +171,8 @@ def main():
                         plt_bits.add_plot(bits_sent, bit_received, title="Bits", reference_label="Bits sent", pulse="Bit")
 
                     error_avg[ki_index, noise_index, kp_index] += error_pct
+                    progress.update(1)
+    progress.close()
 
     # Average the error values
     error_avg /= ITERATIONS
