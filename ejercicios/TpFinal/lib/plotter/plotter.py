@@ -39,14 +39,30 @@ class Plotter:
         self.initialized = False
 
     ## @brief Initializes the matplotlib figure and subplots
+    #  @details Creates a figure with subplots based on the mode and number of stages.
+    #  For "real" mode, creates a single column layout; for "complex" mode, creates a 2-column layout.
     def _init_figure(self):
-        nrows = self.num_stages if self.mode == "real" else self.num_stages * 2
-        self.fig, axes = plt.subplots(nrows, 1, figsize=(15, 4 * nrows), sharex=True)
+        if self.mode == "real":
+            nrows = self.num_stages
+            ncols = 1
+            figsize = (15, 4 * nrows)
+        else:  # complex mode
+            nrows = self.num_stages
+            ncols = 2  # 2 columns: real and imaginary
+            figsize = (20, 4 * nrows)  # wider figure for 2 columns
 
-        if nrows == 1:
+        self.fig, axes = plt.subplots(nrows, ncols, figsize=figsize, sharex=True)
+
+        # Handle different axes array shapes
+        if nrows == 1 and ncols == 1:
             self.axes = [axes]
-        else:
+        elif nrows == 1:
             self.axes = list(axes)
+        elif ncols == 1:
+            self.axes = list(axes)
+        else:
+            # For complex mode, flatten the 2D array to match expected indexing
+            self.axes = axes.flatten()
 
         self.initialized = True
 
