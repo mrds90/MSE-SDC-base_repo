@@ -54,3 +54,233 @@ This script is intended for educational and research purposes, allowing users to
 
 **In summary:**  
 [`tp_final.py`](tp_final.py) orchestrates a full digital communication chain simulation, using modular classes from [`lib`](lib) for each subsystem, and provides both quantitative and visual analysis of system performance under varying conditions.
+
+---
+
+
+## Results
+
+
+### Errors: 0, Len Diff: 0, Error : 0.00%
+![Ideal](./Figures/case_1_signal_1.png)
+&nbsp;
+![Ideal](./Figures/case_1_signal_2.png)
+&nbsp;
+![Ideal](./Figures/case_1_signal_3.png)
+&nbsp;
+![Ideal](./Figures/case_1_signal_4.png)
+
+
+
+### Errors: 0, Len Diff: 0, Error : 0.00%
+![Case 2](./Figures/case_2_signal_1.png)
+&nbsp;
+![Case 2](./Figures/case_2_signal_2.png)
+&nbsp;
+![Case 2](./Figures/case_2_signal_3.png)
+&nbsp;
+![Case 2](./Figures/case_2_signal_4.png)
+
+
+
+### Errors: 28, Len Diff: 4, Error : 80.00%
+![Case 3](./Figures/case_3_signal_1.png)
+&nbsp;
+![Case 3](./Figures/case_3_signal_2.png)
+&nbsp;
+![Case 3](./Figures/case_3_signal_3.png)
+&nbsp;
+![Case 3](./Figures/case_3_signal_4.png)
+
+
+
+### Errors: 34, Len Diff: 2, Error : 90.00%
+![Case 4](./Figures/case_4_signal_1.png)
+&nbsp;
+![Case 4](./Figures/case_4_signal_2.png)
+&nbsp;
+![Case 4](./Figures/case_4_signal_3.png)
+&nbsp;
+![Case 4](./Figures/case_4_signal_4.png)
+
+
+
+### Errors: 0, Len Diff: 0, Error : 0.00%
+![Case 5](./Figures/case_5_signal_1.png)
+&nbsp;
+![Case 5](./Figures/case_5_signal_2.png)
+&nbsp;
+![Case 5](./Figures/case_5_signal_3.png)
+&nbsp;
+![Case 5](./Figures/case_5_signal_4.png)
+
+
+
+### Errors: 0, Len Diff: 0, Error : 0.00%
+![Case 6](./Figures/case_6_signal_1.png)
+&nbsp;
+![Case 6](./Figures/case_6_signal_2.png)
+&nbsp;
+![Case 6](./Figures/case_6_signal_3.png)
+&nbsp;
+![Case 6](./Figures/case_6_signal_4.png)
+
+
+
+### Errors: 11, Len Diff: 2, Error : 32.50%
+![Case 7](./Figures/case_7_signal_1.png)
+&nbsp;
+![Case 7](./Figures/case_7_signal_2.png)
+&nbsp;
+![Case 7](./Figures/case_7_signal_3.png)
+&nbsp;
+![Case 7](./Figures/case_7_signal_4.png)
+
+
+
+### Errors: 34, Len Diff: 2, Error : 90.00%
+![Case 8](./Figures/case_8_signal_1.png)
+&nbsp;
+![Case 8](./Figures/case_8_signal_2.png)
+&nbsp;
+![Case 8](./Figures/case_8_signal_3.png)
+&nbsp;
+![Case 8](./Figures/case_8_signal_4.png)
+
+
+
+### Errors: 0, Len Diff: 0, Error : 0.00%
+![Case 9](./Figures/case_9_signal_1.png)
+&nbsp;
+![Case 9](./Figures/case_9_signal_2.png)
+&nbsp;
+![Case 9](./Figures/case_9_signal_3.png)
+&nbsp;
+![Case 9](./Figures/case_9_signal_4.png)
+
+
+
+### Errors: 1, Len Diff: 0, Error : 2.50%
+![Case 10](./Figures/case_10_signal_1.png)
+&nbsp;
+![Case 10](./Figures/case_10_signal_2.png)
+&nbsp;
+![Case 10](./Figures/case_10_signal_3.png)
+&nbsp;
+![Case 10](./Figures/case_10_signal_4.png)
+
+
+
+### Errors: 20, Len Diff: 2, Error : 55.00%
+![Case 11](./Figures/case_11_signal_1.png)
+&nbsp;
+![Case 11](./Figures/case_11_signal_2.png)
+&nbsp;
+![Case 11](./Figures/case_11_signal_3.png)
+&nbsp;
+![Case 11](./Figures/case_11_signal_4.png)
+
+
+
+### Errors: 40, Len Diff: 4, Error : 110.00%
+![Case 12](./Figures/case_12_signal_1.png)
+&nbsp;
+![Case 12](./Figures/case_12_signal_2.png)
+&nbsp;
+![Case 12](./Figures/case_12_signal_3.png)
+&nbsp;
+![Case 12](./Figures/case_12_signal_4.png)
+
+
+
+### Errors: 0, Len Diff: 0, Error : 0.00%
+![Case 13](./Figures/case_13_signal_1.png)
+&nbsp;
+![Case 13](./Figures/case_13_signal_2.png)
+&nbsp;
+![Case 13](./Figures/case_13_signal_3.png)
+&nbsp;
+![Case 13](./Figures/case_13_signal_4.png)
+
+
+
+### Errors: 0, Len Diff: 0, Error : 0.00%
+![Case 14](./Figures/case_14_signal_1.png)
+&nbsp;
+![Case 14](./Figures/case_14_signal_2.png)
+&nbsp;
+![Case 14](./Figures/case_14_signal_3.png)
+&nbsp;
+![Case 14](./Figures/case_14_signal_4.png)
+
+
+
+### Errors: 24, Len Diff: 4, Error : 70.00%
+![Case 15](./Figures/case_15_signal_1.png)
+&nbsp;
+![Case 15](./Figures/case_15_signal_2.png)
+&nbsp;
+![Case 15](./Figures/case_15_signal_3.png)
+&nbsp;
+![Case 15](./Figures/case_15_signal_4.png)
+
+
+
+### Errors: 22, Len Diff: 0, Error : 55.00%
+![Case 16](./Figures/case_16_signal_1.png)
+&nbsp;
+![Case 16](./Figures/case_16_signal_2.png)
+&nbsp;
+![Case 16](./Figures/case_16_signal_3.png)
+&nbsp;
+![Case 16](./Figures/case_16_signal_4.png)
+
+
+
+### Errors: 0, Len Diff: 0, Error : 0.00%
+![Case 17](./Figures/case_17_signal_1.png)
+&nbsp;
+![Case 17](./Figures/case_17_signal_2.png)
+&nbsp;
+![Case 17](./Figures/case_17_signal_3.png)
+&nbsp;
+![Case 17](./Figures/case_17_signal_4.png)
+
+
+
+### Errors: 0, Len Diff: 0, Error : 0.00%
+![Case 18](./Figures/case_18_signal_1.png)
+&nbsp;
+![Case 18](./Figures/case_18_signal_2.png)
+&nbsp;
+![Case 18](./Figures/case_18_signal_3.png)
+&nbsp;
+![Case 18](./Figures/case_18_signal_4.png)
+
+
+
+### Errors: 36, Len Diff: 6, Error : 105.00%
+![Case 19](./Figures/case_19_signal_1.png)
+&nbsp;
+![Case 19](./Figures/case_19_signal_2.png)
+&nbsp;
+![Case 19](./Figures/case_19_signal_3.png)
+&nbsp;
+![Case 19](./Figures/case_19_signal_4.png)
+
+
+
+### Errors: 33, Len Diff: 4, Error : 92.50%
+![Case 20](./Figures/case_20_signal_1.png)
+&nbsp;
+![Case 20](./Figures/case_20_signal_2.png)
+&nbsp;
+![Case 20](./Figures/case_20_signal_3.png)
+&nbsp;
+![Case 20](./Figures/case_20_signal_4.png)
+
+
+## Heatmap
+![Heatmap](./Figures/Heatmap.png)
+
+### Best global combination KP = 0.45, KI = 0.00
