@@ -60,17 +60,28 @@ This script is intended for educational and research purposes, allowing users to
 
 ## Results
 
+### SNR = No SNR
 
 ### Errors: 0, Len Diff: 0, Error : 0.00%
+
+
+####On the following plots is shown the IDEAL case of a data transmission, having a transmission with no SNR or without noise.
+####The picture below is the general picture with the 10 bytes transmission data.
 ![Ideal](./Figures/case_1_signal_1.png)
 &nbsp;
+
+####The following pictures shows a zoom in of the picture above, of just one byte transmission.
 ![Ideal](./Figures/case_1_signal_2.png)
 &nbsp;
+####The next 2 pictures shows that the demodulator receives exactly what was sent in bytes and bits.
 ![Ideal](./Figures/case_1_signal_3.png)
 &nbsp;
 ![Ideal](./Figures/case_1_signal_4.png)
 
+This result is expected because there is no Noise in the channel path.
 
+
+### SNR = 10
 
 ### Errors: 0, Len Diff: 0, Error : 0.00%
 ![Case 2](./Figures/case_2_signal_1.png)
@@ -81,7 +92,7 @@ This script is intended for educational and research purposes, allowing users to
 &nbsp;
 ![Case 2](./Figures/case_2_signal_4.png)
 
-
+### SNR = 5
 
 ### Errors: 28, Len Diff: 4, Error : 80.00%
 ![Case 3](./Figures/case_3_signal_1.png)
@@ -92,7 +103,7 @@ This script is intended for educational and research purposes, allowing users to
 &nbsp;
 ![Case 3](./Figures/case_3_signal_4.png)
 
-
+### SNR = 0
 
 ### Errors: 34, Len Diff: 2, Error : 90.00%
 ![Case 4](./Figures/case_4_signal_1.png)
@@ -102,182 +113,6 @@ This script is intended for educational and research purposes, allowing users to
 ![Case 4](./Figures/case_4_signal_3.png)
 &nbsp;
 ![Case 4](./Figures/case_4_signal_4.png)
-
-
-
-### Errors: 0, Len Diff: 0, Error : 0.00%
-![Case 5](./Figures/case_5_signal_1.png)
-&nbsp;
-![Case 5](./Figures/case_5_signal_2.png)
-&nbsp;
-![Case 5](./Figures/case_5_signal_3.png)
-&nbsp;
-![Case 5](./Figures/case_5_signal_4.png)
-
-
-
-### Errors: 0, Len Diff: 0, Error : 0.00%
-![Case 6](./Figures/case_6_signal_1.png)
-&nbsp;
-![Case 6](./Figures/case_6_signal_2.png)
-&nbsp;
-![Case 6](./Figures/case_6_signal_3.png)
-&nbsp;
-![Case 6](./Figures/case_6_signal_4.png)
-
-
-
-### Errors: 11, Len Diff: 2, Error : 32.50%
-![Case 7](./Figures/case_7_signal_1.png)
-&nbsp;
-![Case 7](./Figures/case_7_signal_2.png)
-&nbsp;
-![Case 7](./Figures/case_7_signal_3.png)
-&nbsp;
-![Case 7](./Figures/case_7_signal_4.png)
-
-
-
-### Errors: 34, Len Diff: 2, Error : 90.00%
-![Case 8](./Figures/case_8_signal_1.png)
-&nbsp;
-![Case 8](./Figures/case_8_signal_2.png)
-&nbsp;
-![Case 8](./Figures/case_8_signal_3.png)
-&nbsp;
-![Case 8](./Figures/case_8_signal_4.png)
-
-
-
-### Errors: 0, Len Diff: 0, Error : 0.00%
-![Case 9](./Figures/case_9_signal_1.png)
-&nbsp;
-![Case 9](./Figures/case_9_signal_2.png)
-&nbsp;
-![Case 9](./Figures/case_9_signal_3.png)
-&nbsp;
-![Case 9](./Figures/case_9_signal_4.png)
-
-
-
-### Errors: 1, Len Diff: 0, Error : 2.50%
-![Case 10](./Figures/case_10_signal_1.png)
-&nbsp;
-![Case 10](./Figures/case_10_signal_2.png)
-&nbsp;
-![Case 10](./Figures/case_10_signal_3.png)
-&nbsp;
-![Case 10](./Figures/case_10_signal_4.png)
-
-
-
-### Errors: 20, Len Diff: 2, Error : 55.00%
-![Case 11](./Figures/case_11_signal_1.png)
-&nbsp;
-![Case 11](./Figures/case_11_signal_2.png)
-&nbsp;
-![Case 11](./Figures/case_11_signal_3.png)
-&nbsp;
-![Case 11](./Figures/case_11_signal_4.png)
-
-
-
-### Errors: 40, Len Diff: 4, Error : 110.00%
-![Case 12](./Figures/case_12_signal_1.png)
-&nbsp;
-![Case 12](./Figures/case_12_signal_2.png)
-&nbsp;
-![Case 12](./Figures/case_12_signal_3.png)
-&nbsp;
-![Case 12](./Figures/case_12_signal_4.png)
-
-
-
-### Errors: 0, Len Diff: 0, Error : 0.00%
-![Case 13](./Figures/case_13_signal_1.png)
-&nbsp;
-![Case 13](./Figures/case_13_signal_2.png)
-&nbsp;
-![Case 13](./Figures/case_13_signal_3.png)
-&nbsp;
-![Case 13](./Figures/case_13_signal_4.png)
-
-
-
-### Errors: 0, Len Diff: 0, Error : 0.00%
-![Case 14](./Figures/case_14_signal_1.png)
-&nbsp;
-![Case 14](./Figures/case_14_signal_2.png)
-&nbsp;
-![Case 14](./Figures/case_14_signal_3.png)
-&nbsp;
-![Case 14](./Figures/case_14_signal_4.png)
-
-
-
-### Errors: 24, Len Diff: 4, Error : 70.00%
-![Case 15](./Figures/case_15_signal_1.png)
-&nbsp;
-![Case 15](./Figures/case_15_signal_2.png)
-&nbsp;
-![Case 15](./Figures/case_15_signal_3.png)
-&nbsp;
-![Case 15](./Figures/case_15_signal_4.png)
-
-
-
-### Errors: 22, Len Diff: 0, Error : 55.00%
-![Case 16](./Figures/case_16_signal_1.png)
-&nbsp;
-![Case 16](./Figures/case_16_signal_2.png)
-&nbsp;
-![Case 16](./Figures/case_16_signal_3.png)
-&nbsp;
-![Case 16](./Figures/case_16_signal_4.png)
-
-
-
-### Errors: 0, Len Diff: 0, Error : 0.00%
-![Case 17](./Figures/case_17_signal_1.png)
-&nbsp;
-![Case 17](./Figures/case_17_signal_2.png)
-&nbsp;
-![Case 17](./Figures/case_17_signal_3.png)
-&nbsp;
-![Case 17](./Figures/case_17_signal_4.png)
-
-
-
-### Errors: 0, Len Diff: 0, Error : 0.00%
-![Case 18](./Figures/case_18_signal_1.png)
-&nbsp;
-![Case 18](./Figures/case_18_signal_2.png)
-&nbsp;
-![Case 18](./Figures/case_18_signal_3.png)
-&nbsp;
-![Case 18](./Figures/case_18_signal_4.png)
-
-
-
-### Errors: 36, Len Diff: 6, Error : 105.00%
-![Case 19](./Figures/case_19_signal_1.png)
-&nbsp;
-![Case 19](./Figures/case_19_signal_2.png)
-&nbsp;
-![Case 19](./Figures/case_19_signal_3.png)
-&nbsp;
-![Case 19](./Figures/case_19_signal_4.png)
-
-
-
-### Errors: 33, Len Diff: 4, Error : 92.50%
-![Case 20](./Figures/case_20_signal_1.png)
-&nbsp;
-![Case 20](./Figures/case_20_signal_2.png)
-&nbsp;
-![Case 20](./Figures/case_20_signal_3.png)
-&nbsp;
-![Case 20](./Figures/case_20_signal_4.png)
 
 
 ## Heatmap

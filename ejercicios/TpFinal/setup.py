@@ -17,6 +17,16 @@ def install_system_deps():
         print("⚠️ On Windows, please install Doxygen and Graphviz manually:")
         print("  - Doxygen: https://www.doxygen.nl/download.html")
         print("  - Graphviz: https://graphviz.org/download/")
+    elif system == "Darwin":
+        print("Installing system dependencies: doxygen and graphviz using Homebrew...")
+        # Check if brew is installed
+        try:
+            subprocess.run(["brew", "--version"], check=True, stdout=subprocess.DEVNULL)
+        except subprocess.CalledProcessError:
+            print("❌ Homebrew is not installed. Please install Homebrew first: https://brew.sh/")
+            sys.exit(1)
+        subprocess.run(["brew", "update"], check=True)
+        subprocess.run(["brew", "install", "doxygen", "graphviz"], check=True)
     else:
         print("Unsupported OS for automatic system package installation.")
 
